@@ -55,7 +55,17 @@ form {
     justify-content: flex-end;
 }
 
-input[type="text"], input[type="password"], select {
+input[type="text"], input[type="password"], select, input[type="email"] {
     width: 120px;
-    /* right: 0; */
+}
+
+h2 {
+    text-align: center;
+    margin: 5px;
+}
+
+.error-box {
+    color: red;
+    margin-top: 5px;
+    font-weight: bold;
 }
