@@ -1,7 +1,9 @@
+var token = localStorage.getItem('TOKEN')
+var isLoggedIn = token === null || !token ? false : true
+
 displayView = function () {
     // the code required to display a view
     
-
     const root = document.getElementById('root')
     let toView = !isLoggedIn ? "welcome-view" : "profile-view" 
     root.innerHTML = document.getElementById(toView).textContent
@@ -11,7 +13,7 @@ window.onload = function () {
     displayView()
 }
 
-var isLoggedIn = false
+
 
 function displayError(errorMessage) {
     const errorBox = document.getElementById('error-box')
@@ -35,6 +37,11 @@ function handleLogin(event)  {
 
     if(!results.success) {
         displayLoginError(results.message)        
+    } else {
+        token = results.data
+        isLoggedIn = true
+        localStorage.setItem('TOKEN', results.data)
+        displayView()
     }
 }
 
