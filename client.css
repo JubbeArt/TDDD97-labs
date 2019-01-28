@@ -69,3 +69,64 @@ h2 {
     margin-top: 5px;
     font-weight: bold;
 }
+
+
+
+#profileview {
+    width: 600px;
+    height: 400px;
+    margin: 100px auto;
+    background-color: hotpink;
+}
+
+#nav {
+    width: inherit;
+    height: 16px;
+    display: flex;
+    flex-direction: row;
+    background-color: green;
+}
+
+#homebutton {
+    width: 200px;
+    height: inherit;
+    background-color: yellow;
+}
+
+#browsebutton {
+    width: 200px;
+    height: inherit;
+    background-color: darkgoldenrod;
+}
+
+#accountbutton {
+    width: 200px;
+    height: inherit;
+    background-color: orange;
+}
+
+#nav a {
+    text-decoration: none;
+    color: black;
+}
+
+#homeview {
+    display: none;
+    height: 384px;
+    width: inherit;
+    background-color: yellow;
+}
+
+#browseview {
+    display: none;
+    height: 384px;
+    width: inherit;
+    background-color: darkgoldenrod;
+}
+
+#accountview {
+    display: none;
+    height: 384px;
+    width: inherit;
+    background-color: orange;
+}
