@@ -81,37 +81,37 @@ h2 {
 
 #nav {
     width: inherit;
-    height: 16px;
+    height: 20px;
     display: flex;
     flex-direction: row;
     background-color: green;
 }
 
-#homebutton {
+#nav div {
+    box-sizing:border-box;
     width: 200px;
     height: inherit;
+    cursor: pointer;
+}
+#homebutton {
     background-color: yellow;
 }
 
 #browsebutton {
-    width: 200px;
-    height: inherit;
     background-color: darkgoldenrod;
 }
 
 #accountbutton {
-    width: 200px;
-    height: inherit;
     background-color: orange;
 }
 
-#nav a {
-    text-decoration: none;
-    color: black;
+.selected {
+    border-left:3px solid rgba(0, 0, 0, 0.3);
+    border-top:2px solid rgba(0, 0, 0, 0.3);
 }
 
 #homeview {
-    display: none;
+    /* display: none; */
     height: 384px;
     width: inherit;
     background-color: yellow;
