@@ -81,8 +81,77 @@
                 <div id="accountbutton" onclick="handleNav(this)">Account</div>
             </div>
     
-            <div id="homeview"></div>
-            <div id="browseview"></div>
+            <div id="homeview">
+                <div id="info-box">
+                    <h3>User info</h3>
+                    <ul>
+                        <li>First name: <span id="home-first-name"></span></li> 
+                        <li>Family name: <span id="home-family-name"></span></li>
+                        <li>Gender: <span id="home-gender"></span></li>
+                        <li>City: <span id="home-city"></span></li>
+                        <li>Country: <span id="home-country"></span></li>
+                        <li>Email: <span id="home-email"></span></li>
+                    </ul>
+                </div>
+                
+                <h3>New message</h3>
+                <div id="message-area">
+                    <textarea name="messages" id="msnbs" cols="50" rows="3"></textarea>
+                    <button style="display: block" onclick="sendPost()">PostisPer</button>
+                </div>
+    
+                <h3>All messages</h3>
+                <div id="the-wall">
+                    <div id="post-container">
+                    </div>
+                    <button onclick="getAllPosts('post-container')">Reload</button>
+                </div>
+            </div>
+
+
+            <div id="browseview">
+                <h3>Look up users</h3>
+                    
+                <form onsubmit="browseUser(event)">
+                    <div class="input-field">
+                        Email: <input id="browse-email" type="email" required />
+                    </div>
+                    <input type="submit" value="Look up user" />
+                </form>
+
+                <div id="feedback-user-box" class="feedback-box"></div>
+                    
+                <div id="user-page" style="display: none">
+                    <div>
+                        <h3>User info</h3>
+                        <ul>
+                            <li>First name: <span id="user-first-name"></span></li> 
+                            <li>Family name: <span id="user-family-name"></span></li>
+                            <li>Gender: <span id="user-gender"></span></li>
+                            <li>City: <span id="user-city"></span></li>
+                            <li>Country: <span id="user-country"></span></li>
+                            <li>Email: <span id="user-email"></span></li>
+                        </ul>
+                    </div>
+                    
+                    <h3>New message to user</h3>
+                    <div id="message-area">
+                        <textarea name="messages" id="msnbs2" cols="50" rows="3"></textarea>
+                        <button style="display: block" onclick="sendUserPost()">PostisPer</button>
+                    </div>
+        
+                    <h3>All messages</h3>
+                    <div>
+                        <div id="user-post-container"></div>
+                        <button onclick="reloadUserData()">Reload</button>
+                    </div>
+                </div>
+            
+            </div>
+
+
+
+
             <div id="accountview">
                 <div style="height: 50%">
                     <h3>Change password</h3>

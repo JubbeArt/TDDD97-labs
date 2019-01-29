@@ -5,6 +5,10 @@ body {
     font-family: sans-serif;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 #bigboy {
     width: 600px;
     height: 400px;
@@ -32,7 +36,7 @@ body {
     height: 100px;
     margin-bottom: 10px;
     background-color: white;
-    border: 1px solid black;
+    border: 1px solid black;box-sizing: border-box; 
 }
 
 #signup {
@@ -53,7 +57,7 @@ form {
 
 .input-buttom {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end;box-sizing: border-box; 
 }
 
 input[type="text"], input[type="password"], select, input[type="email"] {
@@ -74,10 +78,10 @@ h2 {
 }
 
 #profileview {
-    width: 600px;
+    width: 600px;box-sizing: border-box; 
     height: 400px;
     margin: 100px auto;
-    background-color: hotpink;
+    /* background-color: hotpink; */
 }
 
 #nav {
@@ -95,7 +99,7 @@ h2 {
     cursor: pointer;
 }
 #homebutton {
-    background-color: yellow;
+    background-color: yellow;box-sizing: border-box; 
 }
 
 #browsebutton {
@@ -112,20 +116,22 @@ h2 {
 }
 
 #homeview {
-    height: 384px;
+    padding: 20px;
     width: inherit;
+    box-sizing: border-box;
     background-color: yellow;
 }
 
 #browseview {
     display: none;
-    height: 384px;
     width: inherit;
+    padding: 24px;
     background-color: darkgoldenrod;
 }
 
 #accountview {
     display: none;
+    padding: 20px;
     height: 384px;
     width: inherit;
     background-color: orange;
@@ -154,17 +160,26 @@ h3 {
 #signout-button:active {
     background: whitesmoke;
     transform: translateY(8px) translateX(8px);
-    box-shadow: #82828266 2px 2px;
-
+    box-shadow: #82828266 2px 2px; 
 }
 
 
 
-#old-password, #reset-password1, #reset-password2 {
-    width: 425px;
+#old-password, #reset-password1, #reset-password2, #browse-email {
+    width: 250px;
 }
 
 /*homeview*/
 ul {
     margin:0;
+}
+
+.post {
+    border: 1px solid hotpink;
+    margin: 10px;
+    padding: 10px;
+}
+
+button {
+    cursor: pointer;
 }

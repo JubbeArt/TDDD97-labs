@@ -3,14 +3,22 @@ var isLoggedIn = token === null || !token ? false : true
 
 displayView = function () {
     // the code required to display a view
+    console.log(isLoggedIn);
+    
     
     const root = document.getElementById('root')
     let toView = !isLoggedIn ? "welcome-view" : "profile-view" 
     root.innerHTML = document.getElementById(toView).textContent
+    if(toView === "profile-view") {
+        loadUserData('home')  // d(^.^)b
+        getAllPosts('post-container') // ~-~
+    }
 }
 
 window.onload = function () {
-    // displayView()
+    displayView()
+    // loadUserData()  // d(^.^)b
+    // getAllPosts() // ~-~
 }
 
 function displayFeedback(message, id, isError = true) {
@@ -121,21 +129,84 @@ function handeResetPassword(event) {
 
 // ----------------HomeView---------------------
 
+function loadUserData(prefix, email) {
+    const token = localStorage.getItem("TOKEN")
+    let result
+    if(email) {
+        result = serverstub.getUserDataByEmail(token, email)
+    } else {
+        result = serverstub.getUserDataByToken(token)
+    }
+    const data = result.data
+
+    document.getElementById(prefix+'-first-name').innerText = data.firstname
+    document.getElementById(prefix+'-family-name').innerText = data.familyname
+    document.getElementById(prefix+'-gender').innerText = data.gender
+    document.getElementById(prefix+'-city').innerText = data.city
+    document.getElementById(prefix+'-country').innerText = data.country
+    document.getElementById(prefix+'-email').innerText = data.email
+} 
+
+
+
 function sendPost() {
     const message = document.getElementById("msnbs").value
     const email = serverstub.getUserDataByToken(token).data.email
-    console.log( serverstub.postMessage(token, message, email) )
+    serverstub.postMessage(token, message, email)
+    getAllPosts('post-container')
 }
 
-function getAllPosts() {
-    const result = serverstub.getUserMessagesByToken(token)
-    const postContainer = document.getElementById('post-container')
+function getAllPosts(id, email) {
+    let result
 
-    msgBox.innerHTML = ''
+    // Get other user
+    if(email) {
+        result = serverstub.getUserMessagesByEmail(token, email)
+        if(!result.success) {
+            // console.log(result)
+            displayFeedback(result.message, 'feedback-user-box')
+            return false
+        } else {
+            hideFeedback('feedback-user-box')
+        }
+    } else { // Get own posts
+        result = serverstub.getUserMessagesByToken(token)
+    }
+
+    const postContainer = document.getElementById(id)
+    postContainer.style.display = 'block'
+    postContainer.innerHTML = ''
 
     result.data.forEach(msg => {
-        
+        postContainer.innerHTML += `<div class="post">
+            ${msg.content}
+        </div>`
     })
+
+    return true
 }
 
-getAllPosts()
+let email
+
+function browseUser(event) {
+    event.preventDefault()
+    email = event.target[0].value
+    
+
+    const userExists = getAllPosts('user-post-container', email)
+
+    if(userExists) {
+        document.getElementById('user-page').style.display = 'block'
+        loadUserData('user', email)
+    }
+}
+
+function reloadUserData() {
+    getAllPosts('user-post-container', email)
+}
+
+function sendUserPost() {
+    const message = document.getElementById("msnbs2").value
+    serverstub.postMessage(token, message, email)
+    getAllPosts('user-post-container', email)
+}
