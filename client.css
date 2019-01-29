@@ -65,14 +65,13 @@ h2 {
     margin: 5px;
 }
 
-.error-box {
+.feedback-box {
     color: red;
     margin-top: 5px;
     font-weight: bold;
     font-size: 14px;
+    display: none;
 }
-
-
 
 #profileview {
     width: 600px;
@@ -113,7 +112,6 @@ h2 {
 }
 
 #homeview {
-    /* display: none; */
     height: 384px;
     width: inherit;
     background-color: yellow;
@@ -160,10 +158,13 @@ h3 {
 
 }
 
-.feedback-box {
-    display: none
-}
+
 
 #old-password, #reset-password1, #reset-password2 {
     width: 425px;
+}
+
+/*homeview*/
+ul {
+    margin:0;
 }

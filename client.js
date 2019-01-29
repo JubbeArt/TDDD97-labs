@@ -10,7 +10,7 @@ displayView = function () {
 }
 
 window.onload = function () {
-    displayView()
+    // displayView()
 }
 
 function displayFeedback(message, id, isError = true) {
@@ -33,7 +33,7 @@ function handleLogin(event)  {
     console.log(results)    
 
     if(!results.success) {
-        displayFeedback(results.message, 'error-login-box', true)        
+        displayFeedback(results.message, 'feedback-login-box', true)        
     } else {
         token = results.data
         isLoggedIn = true
@@ -56,7 +56,7 @@ function handleSignUp(event) {
     const pw2 = document.getElementById("pw2").value
 
     if(pw1 !== pw2) {
-        displayFeedback('Passwords needs to match',  'error-box', true)
+        displayFeedback('Passwords needs to match',  'feedback-box', true)
         return
     }
 
@@ -70,7 +70,7 @@ function handleSignUp(event) {
         country: document.getElementById('country').value
     })
 
-    displayFeedback(results.message, 'error-box', !results.success)
+    displayFeedback(results.message, 'feedback-box', !results.success)
 }
 
 
@@ -102,9 +102,7 @@ function handleNav(button) {
         accountview.style.display = 'block'
     }
 }
-/**
- * @param {Event} event 
- */
+
 function handeResetPassword(event) {
     event.preventDefault()
     
@@ -120,3 +118,24 @@ function handeResetPassword(event) {
     const results = serverstub.changePassword(token, oldPassword, pw1)
     displayFeedback(results.message, 'feedback-password-box', !results.success)
 }
+
+// ----------------HomeView---------------------
+
+function sendPost() {
+    const message = document.getElementById("msnbs").value
+    const email = serverstub.getUserDataByToken(token).data.email
+    console.log( serverstub.postMessage(token, message, email) )
+}
+
+function getAllPosts() {
+    const result = serverstub.getUserMessagesByToken(token)
+    const postContainer = document.getElementById('post-container')
+
+    msgBox.innerHTML = ''
+
+    result.data.forEach(msg => {
+        
+    })
+}
+
+getAllPosts()
