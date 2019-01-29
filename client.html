@@ -74,7 +74,40 @@
 
     <script type="text/view" id="profile-view">
     
-        <p>Yoouo!:D</p>
+        <div id="profileview">
+            <div id="nav">
+                <div id="homebutton" class="selected" onclick="handleNav(this)">Home</div>
+                <div id="browsebutton" onclick="handleNav(this)">Browse</div>
+                <div id="accountbutton" onclick="handleNav(this)">Account</div>
+            </div>
+    
+            <div id="homeview"></div>
+            <div id="browseview"></div>
+            <div id="accountview">
+                <div style="height: 50%">
+                    <h3>Change password</h3>
+                    <form id="reset-password-form" onsubmit="handeResetPassword(event)">
+                        <div class="input-field">
+                            Old password: <input id="old-password" type="password" length="10"  pattern=".{8,}" required  />
+                        </div>
+                        <div class="input-field">
+                            Password: <input id="reset-password1" type="password" length="10"  pattern=".{8,}" required  />
+                        </div>
+                        <div class="input-field">
+                            Repeat password: <input id="reset-password2" type="password" length="10"  pattern=".{8,}" required  />
+                        </div>
+                        <div class="input-buttom">
+                            <input type="submit" value="login" />
+                        </div>
+                        <div id="feedback-password-box" class="feedback-box"></div>
+                    </form>
+                </div>
+                <div style="height: 50%; text-align: right">
+                    <button id="signout-button" onclick="signOut()">Sign-out</button>
+                </div>
+    
+            </div>
+        </div>
     </script>
 </body>
 

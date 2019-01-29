@@ -13,18 +13,15 @@ window.onload = function () {
     displayView()
 }
 
-
-
-function displayError(errorMessage) {
-    const errorBox = document.getElementById('error-box')
-    errorBox.innerHTML = errorMessage
-    errorBox.style.display = 'block'   
+function displayFeedback(message, id, isError = true) {
+    const feedbackBox = document.getElementById(id)
+    feedbackBox.innerHTML = message
+    feedbackBox.style.color = isError ? 'red' : 'green'    
+    feedbackBox.style.display = 'block'    
 }
 
-function displayLoginError(errorMessage) {
-    const errorBox = document.getElementById('error-login-box')
-    errorBox.innerHTML = errorMessage
-    errorBox.style.display = 'block'   
+function hideFeedback(id) {
+    document.getElementById(id).style.display = 'none'
 }
 
 function handleLogin(event)  {
@@ -36,7 +33,7 @@ function handleLogin(event)  {
     console.log(results)    
 
     if(!results.success) {
-        displayLoginError(results.message)        
+        displayFeedback(results.message, 'error-login-box', true)        
     } else {
         token = results.data
         isLoggedIn = true
@@ -45,13 +42,21 @@ function handleLogin(event)  {
     }
 }
 
+function signOut() {
+    serverstub.signOut(token)
+    isLoggedIn = false
+    localStorage.removeItem("TOKEN")
+    token = null
+    displayView()
+}
+
 function handleSignUp(event) {
     event.preventDefault()
     const pw1 = document.getElementById("pw1").value
     const pw2 = document.getElementById("pw2").value
 
     if(pw1 !== pw2) {
-        displayError('Passwords needs to match' )
+        displayFeedback('Passwords needs to match',  'error-box', true)
         return
     }
 
@@ -65,7 +70,53 @@ function handleSignUp(event) {
         country: document.getElementById('country').value
     })
 
-    if(!results.success) {
-        displayError(results.message)  
+    displayFeedback(results.message, 'error-box', !results.success)
+}
+
+
+/*------------------------- profile-view -------------------------*/
+function handleNav(button) {
+    const homebutton = document.getElementById("homebutton")
+    const browsebutton = document.getElementById("browsebutton")
+    const accountbutton = document.getElementById("accountbutton")
+
+    const homeview = document.getElementById("homeview")
+    const browseview = document.getElementById("browseview")
+    const accountview = document.getElementById("accountview")
+
+    homeview.style.display = 'none'
+    browseview.style.display = 'none'
+    accountview.style.display = 'none'
+
+    homebutton.className = ''
+    browsebutton.className = ''
+    accountbutton.className = ''
+
+    button.className = 'selected'
+
+    if(button === homebutton) {
+        homeview.style.display = 'block'
+    } else if(button === browsebutton) {
+        browseview.style.display = 'block'
+    } else {
+        accountview.style.display = 'block'
     }
+}
+/**
+ * @param {Event} event 
+ */
+function handeResetPassword(event) {
+    event.preventDefault()
+    
+    const oldPassword = document.getElementById("old-password").value 
+    const pw1 = document.getElementById("reset-password1").value
+    const pw2 = document.getElementById("reset-password2").value
+
+    if(pw1 !== pw2) {
+        displayFeedback('Passwords needs to match', 'feedback-password-box', true)
+        return
+    }
+
+    const results = serverstub.changePassword(token, oldPassword, pw1)
+    displayFeedback(results.message, 'feedback-password-box', !results.success)
 }

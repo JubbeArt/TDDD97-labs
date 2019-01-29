@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: dodgerblue;
+    font-family: sans-serif;
 }
 
 #bigboy {
@@ -68,6 +69,7 @@ h2 {
     color: red;
     margin-top: 5px;
     font-weight: bold;
+    font-size: 14px;
 }
 
 
@@ -129,4 +131,39 @@ h2 {
     height: 384px;
     width: inherit;
     background-color: orange;
+}
+
+h3 {
+    margin: 0 0 0 5px;
+    padding: 0;
+}
+
+#signout-button {
+    height: 80%;
+    width: 80%;
+    font-size: 62px;
+    margin: 0 auto;
+    cursor: pointer;
+    display: block;
+    border-radius: 50px;
+    border: 0;
+    background: white;
+    box-sizing: border-box;
+    box-shadow: #82828266 10px 10px;
+    transition: 0.2s ease;
+}
+
+#signout-button:active {
+    background: whitesmoke;
+    transform: translateY(8px) translateX(8px);
+    box-shadow: #82828266 2px 2px;
+
+}
+
+.feedback-box {
+    display: none
+}
+
+#old-password, #reset-password1, #reset-password2 {
+    width: 425px;
 }
