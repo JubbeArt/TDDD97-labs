@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask import request
-from database_helper import teardown_db, validate_login
+from database_helper import teardown_db, login, logout
 
 app = Flask(__name__)
 
@@ -11,12 +11,28 @@ def hello():
 @app.route("/sign_in", methods=['POST'])
 def sign_in():
     data = request.json
-    validate_login(data['email'], data['password'])
+    token = login(data['email'], data['password'])
 
-    return f'email is {data["email"]} and password {data["password"]}'
+    if token:
+        response = {
+            'success': True,
+            'token': token
+        }
+    else:
+        response = {
+            'success': False
+        }
+    
+    return jsonify(response)
 
 
 @app.route("/sign_out")
+def sign_out(): 
+    token = request.headers['Authorization']
+    logout(token)
+    return ''
+
+
 
 @app.route("/sign_up")
 
