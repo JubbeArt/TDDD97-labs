@@ -42,7 +42,7 @@ def logout(token: str):
 
 
 def change_password(token: str, old_password: str, new_password: str):
-    email = query_db('SELECT email FROM tokens WHERE token=?', [token])[0]
+    email = get_email_by_token(token)
     old = query_db('SELECT password FROM users WHERE email=?', [email])[0]
     if(old == old_password):
         execute_db('UPDATE users SET password = ? WHERE email = ?', [new_password, email])
@@ -59,16 +59,54 @@ def get_user_data_by_email(email: str):
     }
     return jsonify(json_response)
 
+def get_email_by_token(token: str):
+    return query_db('SELECT email FROM tokens WHERE token=?', [token])[0]
+
+
 def get_user_data_by_token(token: str):
-    email = query_db('SELECT email FROM tokens WHERE token=?', [token])[0]
+    email = get_email_by_token(token)
     if not email:
         return '-'
     return get_user_data_by_email(email)
+
+def sign_up(email: str, password: str, firstname: str, familyname: str, gender: str, city: str, country: str):
+    gender = 1 if gender == "Male" or gender == "male" or gender == "1" else 0
+    execute_db('INSERT INTO users VALUES (?,?,?,?,?,?,?)', [email, firstname, familyname, password, city, country, gender]) 
+
 
 def is_valid_token(token: str):
     if query_db('SELECT token FROM tokens WHERE token=?', [token]):
         return True
     return False
+
+
+def get_messages_by_email(email: str):
+    data = query_db('SELECT message, author FROM messages WHERE email=?', [email], False)
+    
+    if not data:
+        return jsonify([])
+
+    messages = []
+
+    for d in data:
+        messages.append({
+            'message': d[0],
+            'author': d[1]            
+        })
+
+    return jsonify(messages)
+
+def get_messages_by_token(token: str):
+    email = get_email_by_token(token)
+
+    if email:
+        return get_messages_by_email(email)
+    return ''
+
+def post_message(token, email, message):
+    author = get_email_by_token(token)
+    execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
+    return ''
 
 def get_db():
     db = getattr(g, '_database', None)

@@ -33,7 +33,7 @@ def sign_out():
 @app.route("/sign_up", methods=['POST'])
 def sign_up():
     data = request.json
-    values = ['email', 'password', 'firstname', 'familyname', 'gender', 'city','country']
+    values = ['email', 'password', 'firstname', 'familyname', 'gender', 'city', 'country']
 
     for v in values:
         if v not in data:
@@ -42,8 +42,7 @@ def sign_up():
     if len(data['password']) <= 7:
         return 'You are retarded and shjould get help'
 
-    dh.sign_up(data['email'], data['password'],)
-
+    dh.sign_up(data['email'], data['password'], data['firstname'], data['familyname'], data['gender'], data['city'], data['country'])
 
     return '-'
 
@@ -70,17 +69,27 @@ def get_user_data_by_email():
         return user_data
     return '-'
 
-@app.route("/get_user_messages_by_email")
-def xd():
-    return "waow"
+@app.route("/get_user_messages_by_email", methods=['POST'])
+def get_user_messages_by_email():
+    token = request.headers['Authorization']
+    
+    if dh.is_valid_token(token):
+        return dh.get_messages_by_email(request.json['email'])
+    return '-'
 
 @app.route("/get_user_messages_by_token")
-def Xd():
-    return "waow"
+def get_user_messages_by_token():
+    token = request.headers['Authorization']
+    return dh.get_messages_by_token(token)
+    
 
-@app.route("/post_message")
-def xD():
-    return "waow"
+@app.route("/post_message", methods=['POST'])
+def post_message():
+    token = request.headers['Authorization']   
+    email = request.json['email']
+    message = request.json['message']
+    dh.post_message(token, email, message)
+    return ""
 
 dh.teardown_db(app)
 app.run(debug=True)
