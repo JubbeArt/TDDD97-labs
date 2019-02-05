@@ -23,3 +23,5 @@ CREATE TABLE IF NOT EXISTS  messages (
 
 
 INSERT INTO users VALUES ('a@a', 'a', 'a', 'aaaaaaaa', 'a', 'a', 1);
+
+INSERT INTO users VALUES ('b@a', 'b', 'a', 'baaaaaaa', 'b', 'b' , 1);
