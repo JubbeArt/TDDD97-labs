@@ -46,6 +46,8 @@ def change_password(token: str, old_password: str, new_password: str):
     old = query_db('SELECT password FROM users WHERE email=?', [email])[0]
     if(old == old_password):
         execute_db('UPDATE users SET password = ? WHERE email = ?', [new_password, email])
+        return True
+    return False
   
 def get_user_data_by_email(email: str):
     data = query_db('SELECT email, firstname, familyname, gender, city, country FROM users WHERE email=?', [email])
