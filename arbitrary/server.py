@@ -1,25 +1,27 @@
 from flask import Flask, jsonify
 from flask import request
 import database_helper as dh
+from helpers import json
 
 app = Flask(__name__)
 
 @app.route("/sign_in", methods=['POST'])
+@json
 def sign_in():
     data = request.json
     token = dh.login(data['email'], data['password'])
 
     if token:
-        response = {
+        return {
             'success': True,
+            "message": "Successfully signed in.",
             'token': token
         }
     else:
-        response = {
-            'success': False
+        return {
+            'success': False,
+            "message": "Wrong username or password."
         }
-    
-    return jsonify(response)
 
 
 @app.route("/sign_out")
