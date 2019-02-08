@@ -1,0 +1,185 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: dodgerblue;
+    font-family: sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#bigboy {
+    width: 600px;
+    height: 400px;
+    display: flex;
+    margin: 100px auto;
+    
+}
+
+#logo-slogan {
+    width: 340px;
+    height: inherit;
+    display: inline-block;
+    border: 1px solid black;
+}
+
+#smallboy {
+    width: 250px;
+    margin-left: 10px;
+    height: inherit;
+    display: inline-block;
+}
+
+#login {
+    width: inherit;
+    height: 100px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid black;box-sizing: border-box; 
+}
+
+#signup {
+    width: inherit;
+    background-color: white;
+    height: 290px;
+    border: 1px solid black;
+}
+
+form {
+    padding: 10px;
+}
+
+.input-field {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-buttom {
+    display: flex;
+    justify-content: flex-end;box-sizing: border-box; 
+}
+
+input[type="text"], input[type="password"], select, input[type="email"] {
+    width: 120px;
+}
+
+h2 {
+    text-align: center;
+    margin: 5px;
+}
+
+.feedback-box {
+    color: red;
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    display: none;
+}
+
+#profileview {
+    width: 600px;box-sizing: border-box; 
+    height: 400px;
+    margin: 100px auto;
+    /* background-color: hotpink; */
+}
+
+#nav {
+    width: inherit;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    background-color: green;
+}
+
+#nav div {
+    box-sizing:border-box;
+    width: 200px;
+    height: inherit;
+    cursor: pointer;
+}
+#homebutton {
+    background-color: yellow;box-sizing: border-box; 
+}
+
+#browsebutton {
+    background-color: darkgoldenrod;
+}
+
+#accountbutton {
+    background-color: orange;
+}
+
+.selected {
+    border-left:3px solid rgba(0, 0, 0, 0.3);
+    border-top:2px solid rgba(0, 0, 0, 0.3);
+}
+
+#homeview {
+    padding: 20px;
+    width: inherit;
+    box-sizing: border-box;
+    background-color: yellow;
+}
+
+#browseview {
+    display: none;
+    width: inherit;
+    padding: 24px;
+    background-color: darkgoldenrod;
+}
+
+#accountview {
+    display: none;
+    padding: 20px;
+    height: 384px;
+    width: inherit;
+    background-color: orange;
+}
+
+h3 {
+    margin: 0 0 0 5px;
+    padding: 0;
+}
+
+#signout-button {
+    height: 80%;
+    width: 80%;
+    font-size: 62px;
+    margin: 0 auto;
+    cursor: pointer;
+    display: block;
+    border-radius: 50px;
+    border: 0;
+    background: white;
+    box-sizing: border-box;
+    box-shadow: #82828266 10px 10px;
+    transition: 0.2s ease;
+}
+
+#signout-button:active {
+    background: whitesmoke;
+    transform: translateY(8px) translateX(8px);
+    box-shadow: #82828266 2px 2px; 
+}
+
+
+
+#old-password, #reset-password1, #reset-password2, #browse-email {
+    width: 250px;
+}
+
+/*homeview*/
+ul {
+    margin:0;
+}
+
+.post {
+    border: 1px solid hotpink;
+    margin: 10px;
+    padding: 10px;
+}
+
+button {
+    cursor: pointer;
+}
