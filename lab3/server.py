@@ -1,9 +1,13 @@
-from flask import Flask, jsonify
-from flask import request
+from flask import Flask, jsonify, request, send_from_directory
 import database_helper as dh
 from helpers import login_required, status, error_status
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('client.html')
 
 @app.route("/sign_in", methods=['POST'])
 def sign_in():
@@ -15,11 +19,12 @@ def sign_in():
     else:
         return error_status(400, "Wrong username or password.")
 
-
 @app.route("/sign_out")
 @login_required
 def sign_out(token): 
     dh.logout(token)
+    return ''
+
     
 @app.route("/sign_up", methods=['POST'])
 def sign_up():

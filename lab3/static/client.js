@@ -1,24 +1,28 @@
-var token = localStorage.getItem('TOKEN')
-var isLoggedIn = token === null || !token ? false : true
+import requests from './requests.js';
 
-displayView = function () {
-    // the code required to display a view
-    console.log(isLoggedIn);
-    
-    
+var token = localStorage.getItem('TOKEN')
+var fucking = ''
+var isLoggedIn = token === null || !token || token === `unde${fucking}fined` ? false : true
+
+/*
+
+1. Ta token från localStorage
+2. Validera tokenet
+
+*/
+
+const displayView = function () {    
     const root = document.getElementById('root')
     let toView = !isLoggedIn ? "welcome-view" : "profile-view" 
     root.innerHTML = document.getElementById(toView).textContent
     if(toView === "profile-view") {
-        loadUserData('home')  // d(^.^)b
-        getAllPosts('post-container') // ~-~
+        // loadUserData('home')  // d(^.^)b
+        // getAllPosts('post-container') // ~-~
     }
 }
 
 window.onload = function () {
     displayView()
-    // loadUserData()  // d(^.^)b
-    // getAllPosts() // ~-~
 }
 
 function displayFeedback(message, id, isError = true) {
@@ -32,26 +36,27 @@ function hideFeedback(id) {
     document.getElementById(id).style.display = 'none'
 }
 
-function handleLogin(event)  {
+async function handleLogin(event)  {
     event.preventDefault()
     const email = document.getElementById('login-email').value
     const password = document.getElementById('login-password').value
    
-    const results = serverstub.signIn(email, password)
-    console.log(results)    
-
-    if(!results.success) {
-        displayFeedback(results.message, 'feedback-login-box', true)        
-    } else {
-        token = results.data
+    try {
+        const result = await requests.post('/sign_in', {email, password}) 
+        token = result.token
+        console.log(token)
         isLoggedIn = true
-        localStorage.setItem('TOKEN', results.data)
+        localStorage.setItem('TOKEN', token)
         displayView()
-    }
+        console.log('result ', result)
+    } catch(e) {
+        console.log('Ehrohr', e)
+        displayFeedback(e, 'feedback-login-box', true)  
+    }   
 }
 
-function signOut() {
-    serverstub.signOut(token)
+async function signOut() {
+    await requests.get('/sign_out', false)
     isLoggedIn = false
     localStorage.removeItem("TOKEN")
     token = null
@@ -130,12 +135,11 @@ function handeResetPassword(event) {
 // ----------------HomeView---------------------
 
 function loadUserData(prefix, email) {
-    const token = localStorage.getItem("TOKEN")
     let result
     if(email) {
-        result = serverstub.getUserDataByEmail(token, email)
-    } else {
-        result = serverstub.getUserDataByToken(token)
+        result = requests.post('get_user_data_by_email', {email})
+    } else {x
+        result = requests.get('get_user_data_by_email')
     }
     const data = result.data
 
@@ -210,3 +214,53 @@ function sendUserPost() {
     serverstub.postMessage(token, message, email)
     getAllPosts('user-post-container', email)
 }
+
+
+
+// -------------- DONT LOOK BELOW THIS LINE ------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.handleLogin = handleLogin
+window.signOut = signOut
+window.handleNav = handleNav

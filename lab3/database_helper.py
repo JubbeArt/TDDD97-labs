@@ -1,9 +1,10 @@
 import sqlite3
 from flask import g, jsonify
 from random import random
+import os
 
-
-DATABASE = '/home/jeswr740/TDDD91/Lab1/arbitrary/database.db'
+current_folder = os.path.dirname(os.path.abspath(__file__))
+DATABASE = current_folder + '/database.db'
 
 def query_db(query: str, args=(), one: bool =True):
     cursor = get_db().execute(query, args)
