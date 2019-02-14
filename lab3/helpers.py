@@ -20,7 +20,9 @@ def login_required(function):
 
 def error_status(code: int, message: str) -> str:
     return '', f'{code} {message}'
+    # return '', str(code) + ' ' + message
 
 def status(data, message: str = '', code: int = 200):
     data = jsonify(data) if data else '-'
     return data, f'{code} {message}' 
+    # return data, str(code) + ' ' + message

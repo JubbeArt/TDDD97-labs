@@ -35,6 +35,7 @@ def sign_up():
     for v in values:
         if v not in data:
             return error_status(400, f'Missing field {v}.')
+            # return error_status(400, 'Missing some field')
 
     if len(data['password']) <= 7:
         return error_status(400, 'Password too short.')
@@ -48,6 +49,7 @@ def sign_up():
 @login_required
 def change_password(token):
     data = request.json
+    print('HERE', data)
     
     if dh.change_password(token, data['oldPassword'], data['newPassword']):
         return status('')

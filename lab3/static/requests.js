@@ -16,8 +16,7 @@ function post(url, data) {
 }
 
 function get(url, expectResponse = true) {
-    var Console = console
-    Console.log(localStorage.getItem('TOKEN'))
+    // console.log(localStorage.getItem('TOKEN'))
     return fetch(url, {
         headers: {
             'Accept': 'application/json',
@@ -34,5 +33,4 @@ function get(url, expectResponse = true) {
 
 export default {
     post, get
-
 }

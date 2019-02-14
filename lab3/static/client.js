@@ -11,13 +11,15 @@ var isLoggedIn = token === null || !token || token === `unde${fucking}fined` ? f
 
 */
 
+// TODO: FIXA catcha:rna
+
 const displayView = function () {    
     const root = document.getElementById('root')
     let toView = !isLoggedIn ? "welcome-view" : "profile-view" 
     root.innerHTML = document.getElementById(toView).textContent
     if(toView === "profile-view") {
-        // loadUserData('home')  // d(^.^)b
-        // getAllPosts('post-container') // ~-~
+        loadUserData('home')  // d(^.^)b
+        getAllPosts('post-container') // ~-~
     }
 }
 
@@ -73,7 +75,7 @@ function handleSignUp(event) {
         return
     }
 
-    const results = serverstub.signUp({
+    const results = requests.post.signUp('/sign_up', {
         email: document.getElementById('email').value,
         password: document.getElementById('pw2').value,
         firstname: document.getElementById('firstname').value,
@@ -116,7 +118,7 @@ function handleNav(button) {
     }
 }
 
-function handeResetPassword(event) {
+async function handleResetPassword(event) {
     event.preventDefault()
     
     const oldPassword = document.getElementById("old-password").value 
@@ -127,28 +129,40 @@ function handeResetPassword(event) {
         displayFeedback('Passwords needs to match', 'feedback-password-box', true)
         return
     }
-
-    const results = serverstub.changePassword(token, oldPassword, pw1)
-    displayFeedback(results.message, 'feedback-password-box', !results.success)
+    const newPassword = pw1
+    console.log({oldPassword, newPassword})
+    try {
+        const results =await requests.post('/change_password', {newPassword, oldPassword})
+    } catch(e) {
+        console.log('Fail', e)
+    }
+    displayFeedback(results, 'feedback-password-box', !results.success)
 }
 
 // ----------------HomeView---------------------
 
-function loadUserData(prefix, email) {
+// TODO: Skriv skit i catcharna
+async function loadUserData(prefix, email) {
     let result
     if(email) {
-        result = requests.post('get_user_data_by_email', {email})
-    } else {x
-        result = requests.get('get_user_data_by_email')
+        try {
+            result = await requests.post('get_user_data_by_email', {email})
+        } catch(e) {
+            console.log('Fail', e)
+        }
+    } else {
+        try {
+            result = await requests.get('get_user_data_by_token')
+        } catch(e) {
+            console.log('Fail', e)
+        }
     }
-    const data = result.data
-
-    document.getElementById(prefix+'-first-name').innerText = data.firstname
-    document.getElementById(prefix+'-family-name').innerText = data.familyname
-    document.getElementById(prefix+'-gender').innerText = data.gender
-    document.getElementById(prefix+'-city').innerText = data.city
-    document.getElementById(prefix+'-country').innerText = data.country
-    document.getElementById(prefix+'-email').innerText = data.email
+    document.getElementById(prefix+'-first-name').innerText = result.firstname ? result.firstname : ''
+    document.getElementById(prefix+'-family-name').innerText = result.familyname ? result.familyname : ''
+    document.getElementById(prefix+'-gender').innerText = result.gender ? result.gender : ''
+    document.getElementById(prefix+'-city').innerText = result.city ? result.city : ''
+    document.getElementById(prefix+'-country').innerText = result.country ? result.country : ''
+    document.getElementById(prefix+'-email').innerText = result.email ? result.email : ''
 } 
 
 
@@ -160,30 +174,38 @@ function sendPost() {
     getAllPosts('post-container')
 }
 
-function getAllPosts(id, email) {
+async function getAllPosts(id, email) {
     let result
 
     // Get other user
     if(email) {
-        result = serverstub.getUserMessagesByEmail(token, email)
+        try{
+            result = await requests.post('/get_user_messages_by_email', {email})
+        } catch(e) {
+            console.log('Fail', e)
+        }
+
         if(!result.success) {
-            // console.log(result)
             displayFeedback(result.message, 'feedback-user-box')
             return false
         } else {
             hideFeedback('feedback-user-box')
         }
     } else { // Get own posts
-        result = serverstub.getUserMessagesByToken(token)
+        try {
+        result = await requests.get('get_user_messages_by_token')
+        } catch(e) {
+            console.log('Fail', e)
+        }
     }
 
     const postContainer = document.getElementById(id)
     postContainer.style.display = 'block'
     postContainer.innerHTML = ''
 
-    result.data.forEach(msg => {
+    result.forEach(msg => {
         postContainer.innerHTML += `<div class="post">
-            ${msg.content}
+            ${msg.message}
         </div>`
     })
 
@@ -264,3 +286,12 @@ function sendUserPost() {
 window.handleLogin = handleLogin
 window.signOut = signOut
 window.handleNav = handleNav
+
+
+window.handleResetPassword = handleResetPassword
+// window.reloadUserData = reloadUserData
+// window.sendPost = sendPost
+// window.getAllPosts = getAllPosts
+// window.sendUserPost = sendUserPost
+// window.handleSignUp = handleSignUp
+// window.browseUser = browseUser
