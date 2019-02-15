@@ -1,4 +1,40 @@
-import requests from './requests.js';
+// ------------ Request helper functions ------------
+
+const requests = {
+    post: function post(url, data) {
+        return fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('TOKEN'), 
+              },
+            method: 'POST', 
+            body: JSON.stringify(data)  
+        })
+            .then( response => {
+                if(response.ok) 
+                    return response.json()  
+                throw new Error(response.statusText, response.status) 
+            })
+    }
+    , 
+    get: function get(url, expectResponse = true) {
+        return fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': localStorage.getItem('TOKEN'), 
+              },
+            method: 'GET', 
+        })
+            .then( response => {
+                if(response.ok)
+                        return expectResponse ? response.json() : ''
+                throw new Error(response.statusText, response.status) 
+            })
+    }
+}
+
+// ------------ End of request helper ------------
 
 var token = localStorage.getItem('TOKEN')
 var fucking = ''
@@ -46,11 +82,11 @@ async function handleLogin(event)  {
     try {
         const result = await requests.post('/sign_in', {email, password}) 
         token = result.token
-        console.log(token)
+        // console.log(token)
         isLoggedIn = true
         localStorage.setItem('TOKEN', token)
         displayView()
-        console.log('result ', result)
+        // console.log('result ', result)
     } catch(e) {
         console.log('Ehrohr', e)
         displayFeedback(e, 'feedback-login-box', true)  
@@ -283,12 +319,12 @@ function sendUserPost() {
 
 
 
-window.handleLogin = handleLogin
-window.signOut = signOut
-window.handleNav = handleNav
+// window.handleLogin = handleLogin
+// window.signOut = signOut
+// window.handleNav = handleNav
 
 
-window.handleResetPassword = handleResetPassword
+// window.handleResetPassword = handleResetPassword
 // window.reloadUserData = reloadUserData
 // window.sendPost = sendPost
 // window.getAllPosts = getAllPosts
