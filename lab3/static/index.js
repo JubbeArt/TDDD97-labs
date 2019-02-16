@@ -1,77 +1,40 @@
-// ------------ Request helper functions ------------
-
-const requests = {
-    post: function post(url, data, expectResponse = true) {
-        return fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('TOKEN'), 
-              },
-            method: 'POST', 
-            body: JSON.stringify(data)  
-        })
-            .then( response => {
-                if(response.ok)
-                    return expectResponse ? response.json() : ''
-                throw new Error(response.statusText, response.status) 
-            })
-    }
-    , 
-    get: function get(url, expectResponse = true) {
-        return fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': localStorage.getItem('TOKEN'), 
-              },
-            method: 'GET', 
-        })
-            .then( response => {
-                if(response.ok)
-                        return expectResponse ? response.json() : ''
-                throw new Error(response.statusText, response.status) 
-            })
-    }
+function id(ID) {
+    return document.getElementById(ID)
 }
 
-// ------------ End of request helper ------------
+function getToken() {
+    const storedToken = localStorage.getItem('TOKEN')
+    return storedToken ? storedToken : undefined
+}
 
-var token = localStorage.getItem('TOKEN')
-var fucking = ''
-var isLoggedIn = token === null || !token || token === `unde${fucking}fined` ? false : true
+function isLoggedIn() {
+    return getToken() != undefined
+}
 
-/*
-
-1. Ta token från localStorage
-2. Validera tokenet
-
-*/
-
-// TODO: FIXA catcha:rna
-
-const displayView = function () {    
+function displayView() {
     const root = document.getElementById('root')
-    let toView = !isLoggedIn ? "welcome-view" : "profile-view" 
-    root.innerHTML = document.getElementById(toView).textContent
-    if(toView === "profile-view") {
-        loadUserData('home')  // d(^.^)b
-        getAllPosts('post-container') // ~-~
+    
+    if(!isLoggedIn()) {
+        root.innerHTML = id('welcome-view').textContent
+        return
     }
+
+    root.innerHTML = id('profile-view').textContent
+    loadUserData('home')
+    getAllPosts('post-container')
 }
 
-window.onload = function () {
-    displayView()
+window.onload = () => displayView()
+
+function feedback(message, isError = true) {
+    const feedback = id('feedback')
+    feedback.innerHTML = message
+    feedback.style.background = isError ? 'red' : 'green'
+    feedback.style.display = 'block'    
 }
 
-function displayFeedback(message, id, isError = true) {
-    const feedbackBox = document.getElementById(id)
-    feedbackBox.innerHTML = message
-    feedbackBox.style.color = isError ? 'red' : 'green'    
-    feedbackBox.style.display = 'block'    
-}
-
-function hideFeedback(id) {
-    document.getElementById(id).style.display = 'none'
+function clearFeedback() {
+    id('feedback').style.display = 'none'
 }
 
 async function handleLogin(event)  {
@@ -81,24 +44,16 @@ async function handleLogin(event)  {
    
     try {
         const result = await requests.post('/sign_in', {email, password}) 
-        console.log(result)
-        token = result.token
-        // console.log(token)
-        isLoggedIn = true
-        localStorage.setItem('TOKEN', token)
+        localStorage.setItem('TOKEN', result.token)
         displayView()
-        // console.log('result ', result)
     } catch(e) {
-        console.log('Ehrohr', e)
-        displayFeedback(e, 'feedback-login-box', true)  
+        feedback(e)  
     }   
 }
 
 async function signOut() {
     await requests.get('/sign_out', false)
-    isLoggedIn = false
     localStorage.removeItem("TOKEN")
-    token = null
     displayView()
 }
 
@@ -108,7 +63,7 @@ function handleSignUp(event) {
     const pw2 = document.getElementById("pw2").value
 
     if(pw1 !== pw2) {
-        displayFeedback('Passwords needs to match',  'feedback-box', true)
+        feedback('Passwords needs to match')
         return
     }
 
@@ -122,7 +77,7 @@ function handleSignUp(event) {
         country: document.getElementById('country').value
     })
 
-    displayFeedback(results.message, 'feedback-box', !results.success)
+    feedback(results.message, !results.success)
 }
 
 
@@ -163,16 +118,16 @@ async function handleResetPassword(event) {
     const pw2 = document.getElementById("reset-password2").value
 
     if(pw1 !== pw2) {
-        displayFeedback('Passwords needs to match', 'feedback-password-box', true)
+        feedback('Passwords needs to match')
         return
     }
     const newPassword = pw1
     try {
-        const results =await requests.post('/change_password', {newPassword, oldPassword})
+        const results = await requests.post('/change_password', {newPassword, oldPassword})
     } catch(e) {
         console.error('Fail', e)
     }
-    displayFeedback(results, 'feedback-password-box', !results.success)
+    feedback(results, !results.success)
 }
 
 // ----------------HomeView---------------------
@@ -221,9 +176,9 @@ async function getAllPosts(id, email) {
     if(email) {
         try{
             result = await requests.post('/get_user_messages_by_email', {email})
-            hideFeedback('feedback-user-box')
+            clearFeedback()
         } catch(e) {
-            displayFeedback(e, 'feedback-user-box')
+            feedback(e)
         }
     } else { // Get own posts
         try {
@@ -270,65 +225,3 @@ function sendUserPost() {
     requests.post('/post_message', {message, email}, false)
     getAllPosts('user-post-container', email)
 }
-
-
-
-// -------------- DONT LOOK BELOW THIS LINE ------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-// window.handleLogin = handleLogin - DONE
-// window.signOut = signOut - DONE
-// window.handleNav = handleNav - DONE
-
-
-// window.handleResetPassword = handleResetPassword - DONE
-// window.reloadUserData = reloadUserData - DONE
-// window.sendPost = sendPost - DONE
-// window.getAllPosts = getAllPosts - SEMI-DONE
-// window.sendUserPost = sendUserPost
-// window.handleSignUp = handleSignUp
-// window.browseUser = browseUser - SEMI-DONE
-getUserDataByToken
-getUserDataByEmail
- */
-
-
-
