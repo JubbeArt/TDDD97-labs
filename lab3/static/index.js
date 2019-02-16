@@ -91,7 +91,7 @@ function postsToHTML(posts) {
     return html
 }
 
-// ----------------------- BROWSE
+// ----------------------- BROWSE ----------------------
 
 async function loadUserData(email) {
         return await requests.post('/get_user_data_by_email', {email})

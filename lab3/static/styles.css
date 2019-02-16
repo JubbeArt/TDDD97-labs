@@ -9,6 +9,14 @@ body {
     font-family: sans-serif;
 }
 
+#root {
+    width: 80%;
+    margin: 50px auto 0 auto;
+    display: block;
+    max-width: 1000px;
+    margin-bottom: 32px;
+}
+
 #feedback {
     position: fixed;
     width: 100%;
@@ -19,41 +27,56 @@ body {
     padding: 6px 0;
 }
 
-#bigboy {
-    width: 600px;
-    height: 400px;
+#home, #browse, #account {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+#home {
+    background: yellow;
+}
+
+#browse {
+    background: darkgoldenrod; 
+    display: none
+}
+
+#account {
+    background: orange; 
+    display: none
+}
+
+.tabs {
     display: flex;
-    margin: 100px auto;    
+    flex-direction: row;
 }
 
-#logo-slogan {
-    width: 340px;
-    height: inherit;
-    display: inline-block;
-    border: 1px solid black;
+.tab {
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    font-size: 23px;
+    margin: 0 10px;
+    border-radius: 10px 37px;
 }
 
-#smallboy {
-    width: 250px;
-    margin-left: 10px;
-    height: inherit;
-    display: inline-block;
+ul {
+    margin:0;
 }
 
-#login {
-    width: inherit;
-    height: 100px;
-    margin-bottom: 10px;
-    background-color: white;
-    border: 1px solid black;box-sizing: border-box; 
+.post {
+    border: 1px solid hotpink;
+    margin: 10px;
+    padding: 10px;
 }
 
-#signup {
-    width: inherit;
-    background-color: white;
-    height: 290px;
-    border: 1px solid black;
+h3 {
+    margin: 13px 0 10px;
+    text-align: center;
+    text-decoration: underline;
 }
+
 
 form {
     padding: 10px;
@@ -62,6 +85,7 @@ form {
 .input-field {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 2px;
 }
 
 .input-buttom {
@@ -73,77 +97,15 @@ input[type="text"], input[type="password"], select, input[type="email"] {
     width: 120px;
 }
 
-h2 {
-    text-align: center;
-    margin: 5px;
-}
 
-.tabs {
-    display: flex;
-    flex-direction: row;
-}
-
-.tab {
-    width: 200px;
-    cursor: pointer;
-}
-
-#homebutton {
-    background-color: yellow;box-sizing: border-box; 
-}
-
-#browsebutton {
-    background-color: darkgoldenrod;
-}
-
-#accountbutton {
-    background-color: orange;
-}
-
-.selected {
-    border-left:3px solid rgba(0, 0, 0, 0.3);
-    border-top:2px solid rgba(0, 0, 0, 0.3);
-}
-
-#profile {
-    width: 600px;box-sizing: border-box; 
-    height: 400px;
-    margin: 100px auto;
-    /* background-color: hotpink; */
-}
-
-#home {
-    padding: 20px;
-    width: inherit;
-    box-sizing: border-box;
-    background-color: yellow;
-}
-
-#browse {
-    display: none;
-    width: inherit;
-    padding: 24px;
-    background-color: darkgoldenrod;
-}
-
-#account {
-    display: none;
-    padding: 20px;
-    height: 384px;
-    width: inherit;
-    background-color: orange;
-}
-
-h3 {
-    margin: 0 0 0 5px;
-    padding: 0;
-}
-
-#signout-button {
-    height: 80%;
-    width: 80%;
-    font-size: 62px;
-    margin: 0 auto;
+button, input[type="submit"] {
+    height: 35px;
+    /* width: 82%; */
+    padding: 0 69px;
+    font-size: 19px;
+    font-weight: bold;
+    margin: 7px auto;
+    margin-bottom: 20px;
     cursor: pointer;
     display: block;
     border-radius: 50px;
@@ -152,31 +114,19 @@ h3 {
     box-sizing: border-box;
     box-shadow: #82828266 10px 10px;
     transition: 0.2s ease;
+    cursor: pointer;
 }
 
-#signout-button:active {
+button, input[type="submit"]  {
     background: whitesmoke;
     transform: translateY(8px) translateX(8px);
     box-shadow: #82828266 2px 2px; 
 }
 
-
-
 #old-password, #reset-password1, #reset-password2, #browse-email {
     width: 250px;
 }
 
-/*homeview*/
-ul {
-    margin:0;
-}
-
-.post {
-    border: 1px solid hotpink;
-    margin: 10px;
-    padding: 10px;
-}
-
-button {
-    cursor: pointer;
+textarea {
+    width: 100%;
 }

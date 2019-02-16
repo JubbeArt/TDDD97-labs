@@ -1,9 +1,12 @@
 <html>
 
 <head>
+    <link href="./static/welcome.css" rel="stylesheet">
     <link href="./static/styles.css" type="text/css" rel="stylesheet" />
+    
     <script src="./static/helpers.js"></script>
     <script src="./static/index.js"></script>
+
 </head>
 
 <body>
@@ -73,87 +76,74 @@
 
     <template id="profile-view">
     
-        <div id="profile">
-            <div class="tabs">
-                <div class="tab" id="homebutton" onclick="handleNav('home')">Home</div>
-                <div class="tab" id="browsebutton" onclick="handleNav('browse')">Browse</div>
-                <div class="tab" id="accountbutton" onclick="handleNav('account')">Account</div>
-            </div>
-    
-            <div>
-                <div>
-                    <h3>User info</h3>
-                    <div id="home-user-data"></div>
-                </div>
-                
-                <h3>New message</h3>
-                <div>
-                    <textarea name="messages" id="msnbs" cols="50" rows="3"></textarea>
-                    <button style="display: block" onclick="sendPost()">PostisPer</button>
-                </div>
-    
-                <h3>All messages</h3>
-                <div>
-                    <div id="post-container">
-                    </div>
-                    <button onclick="getAllPosts('post-container')">Reload</button>
-                </div>
-            </div>
-
-
-            <div id="browse">
-                <h3>Look up users</h3>
-                    
-                <form onsubmit="browseUser(event)">
-                    <div class="input-field">
-                        Email: <input id="browse-email" type="email" required />
-                    </div>
-                    <input type="submit" value="Look up user" />
-                </form>
-
-                <div id="user-page" style="display: none">
-                    <div>
-                        <h3>User info</h3>
-                        
-                    </div>
-                    
-                    <h3>New message to user</h3>
-                    <div id="message-area">
-                        <textarea name="messages" id="msnbs2" cols="50" rows="3"></textarea>
-                        <button style="display: block" onclick="sendUserPost()">PostisPer</button>
-                    </div>
-        
-                    <h3>All messages</h3>
-                    <div>
-                        <div id="user-post-container"></div>
-                        <button onclick="reloadUserData()">Reload</button>
-                    </div>
-                </div>            
-            </div>
-
-            <div id="account">
-                <div style="height: 50%">
-                    <h3>Change password</h3>
-                    <form id="reset-password-form" onsubmit="handleResetPassword(event)">
-                        <div class="input-field">
-                            Old password: <input name="oldPassword" type="password" length="10"  pattern=".{8,}" required  />
-                        </div>
-                        <div class="input-field">
-                            Password: <input name="newPassword" type="password" length="10"  pattern=".{8,}" required  />
-                        </div>
-                        <div class="input-field">
-                            Repeat password: <input name="newPassword2" type="password" length="10"  pattern=".{8,}" required  />
-                        </div>
-                        <div class="input-buttom">
-                            <input type="submit" value="Change password" />
-                        </div>
-                    </form>
-                </div>
-                <div style="height: 50%; text-align: right">
-                    <button id="signout-button" onclick="signOut()">Sign-out</button>
-                </div>
-            </div>
+        <div class="tabs">
+            <div onclick="handleNav('home')" class="tab" style="background: yellow;">Home</div>
+            <div onclick="handleNav('browse')" class="tab" style="background: darkgoldenrod;">Browse</div>
+            <div onclick="handleNav('account')" class="tab" style="background: orange;">Account</div>
         </div>
+
+        <!-- HOME -->
+        <div id="home">
+            <h3>User info</h3>
+            <div id="home-user-data"></div>
+            <hr>
+        
+            <h3>New message</h3>
+            <textarea name="messages" id="msnbs" cols="50" rows="3"></textarea>
+            <button style="display: block" onclick="sendPost()">PostisPer</button>
+            <hr>
+
+            <h3>All messages</h3>
+            <div id="post-container"></div>
+            <button onclick="getAllPosts('post-container')">Reload</button>
+        </div>
+
+        <!-- BROWSE -->
+        <div id="browse">
+            <h3>Look up users</h3>
+                
+            <form onsubmit="browseUser(event)">
+                <div class="input-field">
+                    Email: <input id="browse-email" type="email" required />
+                </div>
+                <input type="submit" value="Look up user" />
+            </form>
+
+            <div id="user-page" style="display: none">
+                <h3>User info</h3>
+                <hr>
+
+                <h3>New message to user</h3>
+                <textarea name="messages" id="msnbs2" cols="50" rows="3"></textarea>
+                <button style="display: block" onclick="sendUserPost()">PostisPer</button>
+                <hr>
+
+                <h3>All messages</h3>
+                <div id="user-post-container"></div>
+                <button onclick="reloadUserData()">Reload</button>
+            </div>            
+        </div>
+
+        <!-- ACCOUNT -->
+        <div id="account">
+            <h3>Change password</h3>
+            <form id="reset-password-form" onsubmit="handleResetPassword(event)">
+                <div class="input-field">
+                    Old password: <input name="oldPassword" type="password" length="10"  pattern=".{8,}" required  />
+                </div>
+                <div class="input-field">
+                    Password: <input name="newPassword" type="password" length="10"  pattern=".{8,}" required  />
+                </div>
+                <div class="input-field">
+                    Repeat password: <input name="newPassword2" type="password" length="10"  pattern=".{8,}" required  />
+                </div>
+                <div class="input-buttom">
+                    <input type="submit" value="Change password" />
+                </div>
+            </form>
+            <button onclick="signOut()">Sign-out</button>
+        </div>
+
     </template>
 </body>
 

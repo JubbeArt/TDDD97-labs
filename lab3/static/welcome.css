@@ -1,0 +1,35 @@
+#bigboy {
+  width: 600px;
+  height: 400px;
+  display: flex;
+  margin: 100px auto;    
+}
+
+#logo-slogan {
+  width: 340px;
+  height: inherit;
+  display: inline-block;
+  border: 1px solid black;
+}
+
+#smallboy {
+  width: 250px;
+  margin-left: 10px;
+  height: inherit;
+  display: inline-block;
+}
+
+#login {
+  width: inherit;
+  height: 100px;
+  margin-bottom: 10px;
+  background-color: white;
+  border: 1px solid black;box-sizing: border-box; 
+}
+
+#signup {
+  width: inherit;
+  background-color: white;
+  height: 290px;
+  border: 1px solid black;
+}
