@@ -84,49 +84,52 @@
 
         <!-- HOME -->
         <div id="home">
-            <h3>User info</h3>
+            <h2>User info</h2>
             <div id="home-user-data"></div>
             <hr>
         
-            <h3>New message</h3>
-            <textarea name="messages" id="msnbs" cols="50" rows="3"></textarea>
-            <button style="display: block" onclick="sendPost()">PostisPer</button>
+            <h2>New message</h2>
+            <form onsubmit="sendPost(event)">
+                <textarea name="message" cols="50" rows="5"></textarea>
+                <input type="submit" value="Post message" />
+            </form>
             <hr>
 
-            <h3>All messages</h3>
+            <h2>All messages</h2>
             <div id="post-container"></div>
-            <button onclick="getAllPosts('post-container')">Reload</button>
+            <button onclick="getUserPosts()">Reload</button>
         </div>
 
         <!-- BROWSE -->
         <div id="browse">
-            <h3>Look up users</h3>
+            <h2>Look up users</h2>
                 
             <form onsubmit="browseUser(event)">
                 <div class="input-field">
-                    Email: <input id="browse-email" type="email" required />
+                    Email: <input name="email" type="email" required />
                 </div>
-                <input type="submit" value="Look up user" />
+                <input type="submit" id="user-lookup" value="Look up user" />
             </form>
 
             <div id="user-page" style="display: none">
-                <h3>User info</h3>
+                <h2>User info</h2>
+                <div id="other-user-data"></div>
                 <hr>
 
-                <h3>New message to user</h3>
-                <textarea name="messages" id="msnbs2" cols="50" rows="3"></textarea>
-                <button style="display: block" onclick="sendUserPost()">PostisPer</button>
+                <h2>New message to user</h2>
+                <textarea name="message" cols="50" rows="5"></textarea>
+                <button style="display: block" onclick="">Post message</button>
                 <hr>
 
-                <h3>All messages</h3>
-                <div id="user-post-container"></div>
+                <h2>All messages</h2>
+                <div id="other-user-posts"></div>
                 <button onclick="reloadUserData()">Reload</button>
             </div>            
         </div>
 
         <!-- ACCOUNT -->
         <div id="account">
-            <h3>Change password</h3>
+            <h2>Change password</h2>
             <form id="reset-password-form" onsubmit="handleResetPassword(event)">
                 <div class="input-field">
                     Old password: <input name="oldPassword" type="password" length="10"  pattern=".{8,}" required  />

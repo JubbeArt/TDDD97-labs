@@ -15,7 +15,6 @@ window.onload = () => displayView()
 // ------------------- WELCOME VIEW -------------------------
 
 async function handleLogin(event)  {
-    event.preventDefault()   
     const { email, password } = getFormInput(event)
    
     try {
@@ -28,7 +27,6 @@ async function handleLogin(event)  {
 }
 
 async function handleSignUp(event) {
-    event.preventDefault()
     const input = getFormInput(event)
 
     if(input.password !== input.password2) {
@@ -84,92 +82,54 @@ function userDataToHTML({firstname, familyname, gender, city, country, email}) {
 function postsToHTML(posts) {
     let html = ''
 
-    posts.forEach(post => {
+    posts.reverse().forEach(post => {
         html += `<div class="post">${post.message}</div>`
     })
 
     return html
 }
 
+async function sendPost(event) {
+    const { message } = getFormInput(event)
+    console.log(message)
+    const email = (await requests.get('get_user_data_by_token')).email
+    await requests.post('/post_message', {message, email}, false)
+    getUserPosts()
+}
+
 // ----------------------- BROWSE ----------------------
 
-async function loadUserData(email) {
-        return await requests.post('/get_user_data_by_email', {email})
-} 
+async function browseUser(event) {
+    const input = getFormInput(event)
 
-
-
-async function sendPost() {
-    const message = document.getElementById("msnbs").value
     try {
-        const email = (await requests.get('get_user_data_by_token')).email
-        await requests.post('/post_message', {message, email}, false)
-    } catch(e) {
-        console.error('Fail', e)
-    }
-    getAllPosts('post-container')
-}
-
-async function getAllPosts(id, email) {
-    let result
-
-    // Get other user
-    if(email) {
-        try{
-            result = await requests.post('/get_user_messages_by_email', {email})
-            clearFeedback()
-        } catch(e) {
-            feedback(e)
-        }
-    } else { // Get own posts
-        try {
-        result = await requests.get('/get_user_messages_by_token')
-        } catch(e) {
-            console.error('Fail', e)
-        }
-    }
-
-    const postContainer = document.getElementById(id)
-    postContainer.style.display = 'block'
-    postContainer.innerHTML = ''
-
-    result.forEach(msg => {
-        postContainer.innerHTML += ``
-    })
-
-    return true
-}
-
-let email
-
-function browseUser(event) {
-    event.preventDefault()
-    email = event.target[0].value
-    
-
-    const userExists = getAllPosts('user-post-container', email)
-
-    if(userExists) {
-        document.getElementById('user-page').style.display = 'block'
-        loadUserData('user', email)
+        const data = await requests.post('/get_user_data_by_email', input)
+        const posts = await requests.post('/get_user_messages_by_email', input)
+        
+        ID('user-page').style.display = 'block'
+        ID('other-user-data').innerHTML = userDataToHTML(data)
+        ID('other-user-posts').innerHTML = postsToHTML(posts)
+    } catch(err) {
+        feedback(err)
     }
 }
 
 function reloadUserData() {
-    getAllPosts('user-post-container', email)
+    // lel
+    ID('user-lookup').click()
 }
 
+// NOT DONE YET
 function sendUserPost() {
     const message = document.getElementById("msnbs2").value
     requests.post('/post_message', {message, email}, false)
-    getAllPosts('user-post-container', email)
+    getOtherUserPosts('user-post-container', email)
 }
 
 
 // ----------------------- PROFILE ----------------------------
 
 async function handleResetPassword(event) {
-    event.preventDefault()
     const { oldPassword, newPassword, newPassword2 } = getFormInput(event)
     
     if(newPassword !== newPassword2) {

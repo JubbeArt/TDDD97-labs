@@ -26,6 +26,7 @@ function clearFeedback() {
 }
 
 function getFormInput(event) {
+  event.preventDefault()   
   const values = {}
 
   event.target.querySelectorAll('input').forEach(input => {
@@ -36,6 +37,10 @@ function getFormInput(event) {
 
   // for gender selecter
   event.target.querySelectorAll('select').forEach(input => {
+    values[input.name] = input.value
+  })
+
+  event.target.querySelectorAll('textarea').forEach(input => {
     values[input.name] = input.value
   })
   

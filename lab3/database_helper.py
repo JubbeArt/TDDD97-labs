@@ -123,10 +123,8 @@ def get_messages_by_token(token: str):
 
 def post_message(token, email, message):
     author = get_email_by_token(token)
-    if token and email and message:
-        execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
-        return 201
-    return 400
+    execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
+    
 
 def get_db():
     db = getattr(g, '_database', None)
