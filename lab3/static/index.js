@@ -12,6 +12,8 @@ function displayView() {
 
 window.onload = () => displayView()
 
+// ---------....------- WELCOME VIEW -----------..------------
+
 async function handleLogin(event)  {
     event.preventDefault()   
     const { email, password } = getFormInput(event)
@@ -31,31 +33,21 @@ async function signOut() {
     displayView()
 }
 
-function handleSignUp(event) {
+async function handleSignUp(event) {
     event.preventDefault()
+    const input = getFormInput(event)
 
-    console.log(getFormInput(event))
-
-    return
-    const pw1 = document.getElementById("pw1").value
-    const pw2 = document.getElementById("pw2").value
-
-    if(pw1 !== pw2) {
+    if(input.password !== input.password2) {
         feedback('Passwords needs to match')
         return
     }
 
-    const results = requests.post.signUp('/sign_up', {
-        email: document.getElementById('email').value,
-        password: document.getElementById('pw2').value,
-        firstname: document.getElementById('firstname').value,
-        familyname: document.getElementById('familyname').value,
-        gender: document.getElementById('gender').value,
-        city: document.getElementById('city').value,
-        country: document.getElementById('country').value
-    })
-
-    feedback(results.message, !results.success)
+    try {
+        await requests.post('/sign_up', input, false)
+        clearFeedback()
+    } catch(err) {
+        feedback(err)
+    }
 }
 
 

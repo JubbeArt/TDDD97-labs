@@ -83,9 +83,14 @@ def get_user_data_by_token(token: str):
     return get_user_data_by_email(email)
 
 def sign_up(email: str, password: str, firstname: str, familyname: str, gender: str, city: str, country: str):
-    gender = 1 if gender == "Male" or gender == "male" or gender == "1" else 0
-    execute_db('INSERT INTO users VALUES (?,?,?,?,?,?,?)', [email, firstname, familyname, password, city, country, gender]) 
+    genderNum = 1 if gender == "Male" or gender == "male" or gender == "1" else 0
 
+    # email already exsits
+    if query_db('SELECT COUNT(*) FROM users WHERE email = ?', [email], True)[0] == 1:
+        return False
+
+    execute_db('INSERT INTO users VALUES (?,?,?,?,?,?,?)', [email, firstname, familyname, password, city, country, genderNum]) 
+    return True
 
 def is_valid_token(token: str):
     if query_db('SELECT token FROM tokens WHERE token=?', [token]):

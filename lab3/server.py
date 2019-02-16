@@ -36,15 +36,14 @@ def sign_up():
     for v in values:
         if v not in data:
             return error_status(400, f'Missing field {v}.')
-            # return error_status(400, 'Missing some field')
 
     if len(data['password']) <= 7:
         return error_status(400, 'Password too short.')
 
-    dh.sign_up(data['email'], data['password'], data['firstname'], data['familyname'], data['gender'], data['city'], data['country'])
-
-    return status('')
-
+    if dh.sign_up(data['email'], data['password'], data['firstname'], data['familyname'], data['gender'], data['city'], data['country']):
+        return status('')
+    else:
+        return error_status(400, 'Email already exsits')
 
 @app.route("/change_password", methods=['POST'])
 @login_required

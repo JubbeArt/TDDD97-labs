@@ -1,5 +1,6 @@
 from functools import wraps
 import database_helper as dh
+from typing import Tuple
 from flask import jsonify, request
 
 def login_required(function):
@@ -18,11 +19,9 @@ def login_required(function):
     return decorated_function
 
 
-def error_status(code: int, message: str) -> str:
+def error_status(code: int, message: str) -> Tuple[str, str]:
     return '', f'{code} {message}'
-    # return '', str(code) + ' ' + message
 
-def status(data, message: str = '', code: int = 200):
-    data = jsonify(data) if data else '-'
-    return data, f'{code} {message}' 
-    # return data, str(code) + ' ' + message
+def status(data, message: str = '', code: int = 200) -> Tuple[str, str]:
+    data = jsonify(data) if data else ''
+    return data, f'{code} {message}'
