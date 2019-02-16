@@ -156,13 +156,13 @@
                     <h3>Change password</h3>
                     <form id="reset-password-form" onsubmit="handleResetPassword(event)">
                         <div class="input-field">
-                            Old password: <input id="old-password" type="password" length="10"  pattern=".{8,}" required  />
+                            Old password: <input name="oldPassword" type="password" length="10"  pattern=".{8,}" required  />
                         </div>
                         <div class="input-field">
-                            Password: <input id="reset-password1" type="password" length="10"  pattern=".{8,}" required  />
+                            Password: <input name="newPassword" type="password" length="10"  pattern=".{8,}" required  />
                         </div>
                         <div class="input-field">
-                            Repeat password: <input id="reset-password2" type="password" length="10"  pattern=".{8,}" required  />
+                            Repeat password: <input name="newPassword2" type="password" length="10"  pattern=".{8,}" required  />
                         </div>
                         <div class="input-buttom">
                             <input type="submit" value="Change password" />

@@ -57,7 +57,7 @@ const requests = {
       .then(response => {
         if (response.ok)
           return expectResponse ? response.json() : ''
-        throw new Error(response.statusText, response.status)
+        throw new Error(response.statusText)
       })
   }
   ,
@@ -72,7 +72,7 @@ const requests = {
       .then(response => {
         if (response.ok)
           return expectResponse ? response.json() : ''
-        throw new Error(response.statusText, response.status)
+        throw new Error(response.statusText)
       })
   }
 }

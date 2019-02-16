@@ -27,12 +27,6 @@ async function handleLogin(event)  {
     }   
 }
 
-async function signOut() {
-    await requests.get('/sign_out', false)
-    localStorage.removeItem("TOKEN")
-    displayView()
-}
-
 async function handleSignUp(event) {
     event.preventDefault()
     const input = getFormInput(event)
@@ -50,37 +44,17 @@ async function handleSignUp(event) {
     }
 }
 
-// --------------------------- TABS -------------------------
+// ---------------------- TABS -----------------------
+
 function handleNav(id) {
     ID('home').style.display = 'none'
     ID('browse').style.display = 'none'
     ID('account').style.display = 'none'
     ID(id).style.display = 'block' 
+    clearFeedback()
 }
 
-/*------------------------- profile-view -------------------------*/
-
-async function handleResetPassword(event) {
-    event.preventDefault()
-    
-    const oldPassword = document.getElementById("old-password").value 
-    const pw1 = document.getElementById("reset-password1").value
-    const pw2 = document.getElementById("reset-password2").value
-
-    if(pw1 !== pw2) {
-        feedback('Passwords needs to match')
-        return
-    }
-    const newPassword = pw1
-    try {
-        const results = await requests.post('/change_password', {newPassword, oldPassword})
-    } catch(e) {
-        console.error('Fail', e)
-    }
-    feedback(results, !results.success)
-}
-
-// ----------------HomeView---------------------
+// -------------------- HOME ------------------------
 
 // TODO: Skriv skit i catcharna
 async function loadUserData(prefix, email) {
@@ -174,4 +148,30 @@ function sendUserPost() {
     const message = document.getElementById("msnbs2").value
     requests.post('/post_message', {message, email}, false)
     getAllPosts('user-post-container', email)
+}
+
+
+// ----------------------- PROFILE ----------------------------
+
+async function handleResetPassword(event) {
+    event.preventDefault()
+    const { oldPassword, newPassword, newPassword2 } = getFormInput(event)
+    
+    if(newPassword !== newPassword2) {
+        feedback('Passwords needs to match')
+        return
+    }
+
+    try {
+        await requests.post('/change_password', {newPassword, oldPassword}, false)
+        feedback('Successfully changed password', false)
+    } catch(err) {
+        feedback(err)
+    }
+}
+
+async function signOut() {
+    await requests.get('/sign_out', false)
+    removeToken()
+    displayView()
 }
