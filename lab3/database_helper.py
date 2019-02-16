@@ -27,7 +27,6 @@ def login(email: str, password: str):
     #tokens = query_db('SELECT token FROM tokens WHERE email = ?', [email])
     db_password = query_db('SELECT password FROM users WHERE email = ?', [email])
     
-    #  
     if db_password[0] == password:
         token = generate_token()
         execute_db('INSERT INTO tokens VALUES (?, ?)', [token , email]) 
@@ -50,16 +49,27 @@ def change_password(token: str, old_password: str, new_password: str):
         return True
     return False
   
+# TODO: Fix the validation
 def get_user_data_by_email(email: str):
     data = query_db('SELECT email, firstname, familyname, gender, city, country FROM users WHERE email=?', [email])
-    json_response =  {
-        'email': data[0],
-        'firstname':data[1],
-        'familyname':data[2], 
-        'gender': 'Male' if data[3] else 'Female', 
-        'city':data[4], 
-        'country': data[5]
-    }
+    if data:
+        json_response =  {
+            'email': data[0],
+            'firstname':data[1],
+            'familyname':data[2], 
+            'gender': 'Male' if data[3] else 'Female', 
+            'city':data[4], 
+            'country': data[5]
+        }
+    else:
+        json_response =  {
+            'email': 'User does not exist',
+            'firstname': 'User does not exist',
+            'familyname':'User does not exist', 
+            'gender': 'User does not exist', 
+            'city':'User does not exist', 
+            'country': 'User does not exist'
+        }
     return jsonify(json_response)
 
 def get_email_by_token(token: str):
@@ -108,8 +118,10 @@ def get_messages_by_token(token: str):
 
 def post_message(token, email, message):
     author = get_email_by_token(token)
-    execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
-    return ''
+    if token and email and message:
+        execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
+        return 201
+    return 400
 
 def get_db():
     db = getattr(g, '_database', None)

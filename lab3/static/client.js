@@ -1,7 +1,7 @@
 // ------------ Request helper functions ------------
 
 const requests = {
-    post: function post(url, data) {
+    post: function post(url, data, expectResponse = true) {
         return fetch(url, {
             headers: {
                 'Accept': 'application/json',
@@ -12,8 +12,8 @@ const requests = {
             body: JSON.stringify(data)  
         })
             .then( response => {
-                if(response.ok) 
-                    return response.json()  
+                if(response.ok)
+                    return expectResponse ? response.json() : ''
                 throw new Error(response.statusText, response.status) 
             })
     }
@@ -81,6 +81,7 @@ async function handleLogin(event)  {
    
     try {
         const result = await requests.post('/sign_in', {email, password}) 
+        console.log(result)
         token = result.token
         // console.log(token)
         isLoggedIn = true
@@ -166,11 +167,10 @@ async function handleResetPassword(event) {
         return
     }
     const newPassword = pw1
-    console.log({oldPassword, newPassword})
     try {
         const results =await requests.post('/change_password', {newPassword, oldPassword})
     } catch(e) {
-        console.log('Fail', e)
+        console.error('Fail', e)
     }
     displayFeedback(results, 'feedback-password-box', !results.success)
 }
@@ -182,15 +182,15 @@ async function loadUserData(prefix, email) {
     let result
     if(email) {
         try {
-            result = await requests.post('get_user_data_by_email', {email})
+            result = await requests.post('/get_user_data_by_email', {email})
         } catch(e) {
-            console.log('Fail', e)
+            console.error('Fail', e)
         }
     } else {
         try {
-            result = await requests.get('get_user_data_by_token')
+            result = await requests.get('/get_user_data_by_token')
         } catch(e) {
-            console.log('Fail', e)
+            console.error('Fail', e)
         }
     }
     document.getElementById(prefix+'-first-name').innerText = result.firstname ? result.firstname : ''
@@ -203,10 +203,14 @@ async function loadUserData(prefix, email) {
 
 
 
-function sendPost() {
+async function sendPost() {
     const message = document.getElementById("msnbs").value
-    const email = serverstub.getUserDataByToken(token).data.email
-    serverstub.postMessage(token, message, email)
+    try {
+        const email = (await requests.get('get_user_data_by_token')).email
+        await requests.post('/post_message', {message, email}, false)
+    } catch(e) {
+        console.error('Fail', e)
+    }
     getAllPosts('post-container')
 }
 
@@ -217,21 +221,15 @@ async function getAllPosts(id, email) {
     if(email) {
         try{
             result = await requests.post('/get_user_messages_by_email', {email})
-        } catch(e) {
-            console.log('Fail', e)
-        }
-
-        if(!result.success) {
-            displayFeedback(result.message, 'feedback-user-box')
-            return false
-        } else {
             hideFeedback('feedback-user-box')
+        } catch(e) {
+            displayFeedback(e, 'feedback-user-box')
         }
     } else { // Get own posts
         try {
-        result = await requests.get('get_user_messages_by_token')
+        result = await requests.get('/get_user_messages_by_token')
         } catch(e) {
-            console.log('Fail', e)
+            console.error('Fail', e)
         }
     }
 
@@ -269,7 +267,7 @@ function reloadUserData() {
 
 function sendUserPost() {
     const message = document.getElementById("msnbs2").value
-    serverstub.postMessage(token, message, email)
+    requests.post('/post_message', {message, email}, false)
     getAllPosts('user-post-container', email)
 }
 
@@ -315,19 +313,22 @@ function sendUserPost() {
 
 
 
+/*
+// window.handleLogin = handleLogin - DONE
+// window.signOut = signOut - DONE
+// window.handleNav = handleNav - DONE
 
 
-
-
-// window.handleLogin = handleLogin
-// window.signOut = signOut
-// window.handleNav = handleNav
-
-
-// window.handleResetPassword = handleResetPassword
-// window.reloadUserData = reloadUserData
-// window.sendPost = sendPost
-// window.getAllPosts = getAllPosts
+// window.handleResetPassword = handleResetPassword - DONE
+// window.reloadUserData = reloadUserData - DONE
+// window.sendPost = sendPost - DONE
+// window.getAllPosts = getAllPosts - SEMI-DONE
 // window.sendUserPost = sendUserPost
 // window.handleSignUp = handleSignUp
-// window.browseUser = browseUser
+// window.browseUser = browseUser - SEMI-DONE
+getUserDataByToken
+getUserDataByEmail
+ */
+
+
+

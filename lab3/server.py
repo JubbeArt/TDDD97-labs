@@ -4,6 +4,7 @@ from helpers import login_required, status, error_status
 
 app = Flask(__name__, static_url_path='/static')
 
+# TODO: Add error checks where needed and don't assume db-helper always succeeds
 
 @app.route('/')
 def index():
@@ -63,6 +64,7 @@ def get_user_data_by_token(token):
 @app.route("/get_user_data_by_email", methods=['POST'])
 @login_required
 def get_user_data_by_email(_):
+    print(request.json)
     return dh.get_user_data_by_email(request.json['email'])
 
 @app.route("/get_user_messages_by_email", methods=['POST'])
@@ -81,8 +83,10 @@ def get_user_messages_by_token(token):
 def post_message(token): 
     email = request.json['email']
     message = request.json['message']
-    dh.post_message(token, email, message)
-    return status('', 'Post posted.', 201)
+    if email and message:
+        if dh.post_message(token, email, message) == 201:
+            return status('', 'Post posted.', 201)
+    return error_status(400, 'Failed to post message.')
 
 dh.teardown_db(app)
 app.run(debug=True)
