@@ -6,8 +6,8 @@ function displayView() {
 
     ID('root').innerHTML = ID('profile-view').innerHTML
     clearFeedback()
-    loadUserData('home')
-    getAllPosts('post-container')
+    getUserData()
+    getUserPosts()
 }
 
 window.onload = () => displayView()
@@ -56,28 +56,45 @@ function handleNav(id) {
 
 // -------------------- HOME ------------------------
 
-// TODO: Skriv skit i catcharna
-async function loadUserData(prefix, email) {
-    let result
-    if(email) {
-        try {
-            result = await requests.post('/get_user_data_by_email', {email})
-        } catch(e) {
-            console.error('Fail', e)
-        }
-    } else {
-        try {
-            result = await requests.get('/get_user_data_by_token')
-        } catch(e) {
-            console.error('Fail', e)
-        }
-    }
-    document.getElementById(prefix+'-first-name').innerText = result.firstname ? result.firstname : ''
-    document.getElementById(prefix+'-family-name').innerText = result.familyname ? result.familyname : ''
-    document.getElementById(prefix+'-gender').innerText = result.gender ? result.gender : ''
-    document.getElementById(prefix+'-city').innerText = result.city ? result.city : ''
-    document.getElementById(prefix+'-country').innerText = result.country ? result.country : ''
-    document.getElementById(prefix+'-email').innerText = result.email ? result.email : ''
+async function getUserData() {
+    const data = await requests.get('/get_user_data_by_token')
+    ID('home-user-data').innerHTML = userDataToHTML(data)
+}    
+    
+
+async function getUserPosts() {
+    const posts =  await requests.get('/get_user_messages_by_token')
+    ID('post-container').innerHTML = postsToHTML(posts)
+}
+
+
+function userDataToHTML({firstname, familyname, gender, city, country, email}) {
+    return `
+        <ul>
+            <li>First name: ${firstname}</li> 
+            <li>Family name: ${familyname}</li>
+            <li>Gender: ${gender}</li>
+            <li>City: ${city}</li>
+            <li>Country: ${country}</li>
+            <li>Email: ${email}</li>
+        </ul>
+    `
+}
+
+function postsToHTML(posts) {
+    let html = ''
+
+    posts.forEach(post => {
+        html += `<div class="post">${post.message}</div>`
+    })
+
+    return html
+}
+
+// ----------------------- BROWSE
+
+async function loadUserData(email) {
+        return await requests.post('/get_user_data_by_email', {email})
 } 
 
 
@@ -117,9 +134,7 @@ async function getAllPosts(id, email) {
     postContainer.innerHTML = ''
 
     result.forEach(msg => {
-        postContainer.innerHTML += `<div class="post">
-            ${msg.message}
-        </div>`
+        postContainer.innerHTML += ``
     })
 
     return true

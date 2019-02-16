@@ -78,30 +78,16 @@ h2 {
     margin: 5px;
 }
 
-.feedback-box {
-    color: red;
-    margin-top: 5px;
-    font-weight: bold;
-    font-size: 14px;
-    display: none;
-}
-
-
-
-#nav {
-    width: inherit;
-    height: 20px;
+.tabs {
     display: flex;
     flex-direction: row;
-    background-color: green;
 }
 
-#nav div {
-    box-sizing:border-box;
+.tab {
     width: 200px;
-    height: inherit;
     cursor: pointer;
 }
+
 #homebutton {
     background-color: yellow;box-sizing: border-box; 
 }

@@ -28,7 +28,6 @@
                         <div class="input-buttom">
                             <input type="submit" value="login" />
                         </div>
-                        <div id="feedback-login-box" class="feedback-box" style="display: none"></div>
                     </form>
     
                 </div>
@@ -66,7 +65,6 @@
                         <div class="input-buttom">
                             <input type="submit" value="SignUp" />
                         </div>
-                        <div id="feedback-box" class="feedback-box" style="display: none"></div>
                     </form>
                 </div>
             </div>
@@ -76,33 +74,26 @@
     <template id="profile-view">
     
         <div id="profile">
-            <div id="nav">
-                <div id="homebutton" class="selected" onclick="handleNav('home')">Home</div>
-                <div id="browsebutton" onclick="handleNav('browse')">Browse</div>
-                <div id="accountbutton" onclick="handleNav('account')">Account</div>
+            <div class="tabs">
+                <div class="tab" id="homebutton" onclick="handleNav('home')">Home</div>
+                <div class="tab" id="browsebutton" onclick="handleNav('browse')">Browse</div>
+                <div class="tab" id="accountbutton" onclick="handleNav('account')">Account</div>
             </div>
     
-            <div id="home">
-                <div id="info-box">
+            <div>
+                <div>
                     <h3>User info</h3>
-                    <ul>
-                        <li>First name: <span id="home-first-name"></span></li> 
-                        <li>Family name: <span id="home-family-name"></span></li>
-                        <li>Gender: <span id="home-gender"></span></li>
-                        <li>City: <span id="home-city"></span></li>
-                        <li>Country: <span id="home-country"></span></li>
-                        <li>Email: <span id="home-email"></span></li>
-                    </ul>
+                    <div id="home-user-data"></div>
                 </div>
                 
                 <h3>New message</h3>
-                <div id="message-area">
+                <div>
                     <textarea name="messages" id="msnbs" cols="50" rows="3"></textarea>
                     <button style="display: block" onclick="sendPost()">PostisPer</button>
                 </div>
     
                 <h3>All messages</h3>
-                <div id="the-wall">
+                <div>
                     <div id="post-container">
                     </div>
                     <button onclick="getAllPosts('post-container')">Reload</button>
@@ -120,19 +111,10 @@
                     <input type="submit" value="Look up user" />
                 </form>
 
-                <div id="feedback-user-box" class="feedback-box"></div>
-                    
                 <div id="user-page" style="display: none">
                     <div>
                         <h3>User info</h3>
-                        <ul>
-                            <li>First name: <span id="user-first-name"></span></li> 
-                            <li>Family name: <span id="user-family-name"></span></li>
-                            <li>Gender: <span id="user-gender"></span></li>
-                            <li>City: <span id="user-city"></span></li>
-                            <li>Country: <span id="user-country"></span></li>
-                            <li>Email: <span id="user-email"></span></li>
-                        </ul>
+                        
                     </div>
                     
                     <h3>New message to user</h3>
@@ -146,10 +128,8 @@
                         <div id="user-post-container"></div>
                         <button onclick="reloadUserData()">Reload</button>
                     </div>
-                </div>
-            
+                </div>            
             </div>
-
 
             <div id="account">
                 <div style="height: 50%">
@@ -167,13 +147,11 @@
                         <div class="input-buttom">
                             <input type="submit" value="Change password" />
                         </div>
-                        <div id="feedback-password-box" class="feedback-box"></div>
                     </form>
                 </div>
                 <div style="height: 50%; text-align: right">
                     <button id="signout-button" onclick="signOut()">Sign-out</button>
                 </div>
-    
             </div>
         </div>
     </template>
