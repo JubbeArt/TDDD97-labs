@@ -86,12 +86,7 @@ h2 {
     display: none;
 }
 
-#profileview {
-    width: 600px;box-sizing: border-box; 
-    height: 400px;
-    margin: 100px auto;
-    /* background-color: hotpink; */
-}
+
 
 #nav {
     width: inherit;
@@ -124,21 +119,28 @@ h2 {
     border-top:2px solid rgba(0, 0, 0, 0.3);
 }
 
-#homeview {
+#profile {
+    width: 600px;box-sizing: border-box; 
+    height: 400px;
+    margin: 100px auto;
+    /* background-color: hotpink; */
+}
+
+#home {
     padding: 20px;
     width: inherit;
     box-sizing: border-box;
     background-color: yellow;
 }
 
-#browseview {
+#browse {
     display: none;
     width: inherit;
     padding: 24px;
     background-color: darkgoldenrod;
 }
 
-#accountview {
+#account {
     display: none;
     padding: 20px;
     height: 384px;

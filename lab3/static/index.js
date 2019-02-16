@@ -12,7 +12,7 @@ function displayView() {
 
 window.onload = () => displayView()
 
-// ---------....------- WELCOME VIEW -----------..------------
+// ------------------- WELCOME VIEW -------------------------
 
 async function handleLogin(event)  {
     event.preventDefault()   
@@ -44,41 +44,21 @@ async function handleSignUp(event) {
 
     try {
         await requests.post('/sign_up', input, false)
-        clearFeedback()
+        feedback('Successfully created account!', false)
     } catch(err) {
         feedback(err)
     }
 }
 
+// --------------------------- TABS -------------------------
+function handleNav(id) {
+    ID('home').style.display = 'none'
+    ID('browse').style.display = 'none'
+    ID('account').style.display = 'none'
+    ID(id).style.display = 'block' 
+}
 
 /*------------------------- profile-view -------------------------*/
-function handleNav(button) {
-    const homebutton = document.getElementById("homebutton")
-    const browsebutton = document.getElementById("browsebutton")
-    const accountbutton = document.getElementById("accountbutton")
-
-    const homeview = document.getElementById("homeview")
-    const browseview = document.getElementById("browseview")
-    const accountview = document.getElementById("accountview")
-
-    homeview.style.display = 'none'
-    browseview.style.display = 'none'
-    accountview.style.display = 'none'
-
-    homebutton.className = ''
-    browsebutton.className = ''
-    accountbutton.className = ''
-
-    button.className = 'selected'
-
-    if(button === homebutton) {
-        homeview.style.display = 'block'
-    } else if(button === browsebutton) {
-        browseview.style.display = 'block'
-    } else {
-        accountview.style.display = 'block'
-    }
-}
 
 async function handleResetPassword(event) {
     event.preventDefault()

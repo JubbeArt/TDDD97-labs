@@ -75,14 +75,14 @@
 
     <template id="profile-view">
     
-        <div id="profileview">
+        <div id="profile">
             <div id="nav">
-                <div id="homebutton" class="selected" onclick="handleNav(this)">Home</div>
-                <div id="browsebutton" onclick="handleNav(this)">Browse</div>
-                <div id="accountbutton" onclick="handleNav(this)">Account</div>
+                <div id="homebutton" class="selected" onclick="handleNav('home')">Home</div>
+                <div id="browsebutton" onclick="handleNav('browse')">Browse</div>
+                <div id="accountbutton" onclick="handleNav('account')">Account</div>
             </div>
     
-            <div id="homeview">
+            <div id="home">
                 <div id="info-box">
                     <h3>User info</h3>
                     <ul>
@@ -110,7 +110,7 @@
             </div>
 
 
-            <div id="browseview">
+            <div id="browse">
                 <h3>Look up users</h3>
                     
                 <form onsubmit="browseUser(event)">
@@ -151,7 +151,7 @@
             </div>
 
 
-            <div id="accountview">
+            <div id="account">
                 <div style="height: 50%">
                     <h3>Change password</h3>
                     <form id="reset-password-form" onsubmit="handleResetPassword(event)">
