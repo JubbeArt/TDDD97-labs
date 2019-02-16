@@ -10,7 +10,7 @@ function displayView() {
     getUserPosts()
 }
 
-window.onload = () => displayView()
+window.onload = displayView
 
 // ------------------- WELCOME VIEW -------------------------
 
@@ -21,8 +21,8 @@ async function handleLogin(event)  {
         const result = await requests.post('/sign_in', {email, password}) 
         localStorage.setItem('TOKEN', result.token)
         displayView()
-    } catch(e) {
-        feedback(e)  
+    } catch(err) {
+        feedback(err)  
     }   
 }
 
@@ -109,6 +109,7 @@ async function browseUser(event) {
         ID('user-page').style.display = 'block'
         ID('other-user-data').innerHTML = userDataToHTML(data)
         ID('other-user-posts').innerHTML = postsToHTML(posts)
+        clearFeedback()
     } catch(err) {
         feedback(err)
     }

@@ -58,13 +58,17 @@ def change_password(token):
 @app.route("/get_user_data_by_token")
 @login_required
 def get_user_data_by_token(token):
-    return dh.get_user_data_by_token(token)
+    return jsonify(dh.get_user_data_by_token(token))
 
 @app.route("/get_user_data_by_email", methods=['POST'])
 @login_required
 def get_user_data_by_email(_):
-    print(request.json)
-    return dh.get_user_data_by_email(request.json['email'])
+    data = dh.get_user_data_by_email(request.json['email'])
+    if data:
+        return status(data)
+    
+    return error_status(400, 'User not found')
+
 
 @app.route("/get_user_messages_by_email", methods=['POST'])
 @login_required

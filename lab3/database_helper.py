@@ -49,11 +49,11 @@ def change_password(token: str, old_password: str, new_password: str):
         return True
     return False
   
-# TODO: Fix the validation
+
 def get_user_data_by_email(email: str):
     data = query_db('SELECT email, firstname, familyname, gender, city, country FROM users WHERE email=?', [email])
     if data:
-        json_response =  {
+        return {
             'email': data[0],
             'firstname':data[1],
             'familyname':data[2], 
@@ -61,16 +61,7 @@ def get_user_data_by_email(email: str):
             'city':data[4], 
             'country': data[5]
         }
-    else:
-        json_response =  {
-            'email': 'User does not exist',
-            'firstname': 'User does not exist',
-            'familyname':'User does not exist', 
-            'gender': 'User does not exist', 
-            'city':'User does not exist', 
-            'country': 'User does not exist'
-        }
-    return jsonify(json_response)
+    return None
 
 def get_email_by_token(token: str):
     return query_db('SELECT email FROM tokens WHERE token=?', [token])[0]
