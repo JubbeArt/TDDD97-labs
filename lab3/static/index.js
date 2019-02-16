@@ -1,46 +1,20 @@
-function id(ID) {
-    return document.getElementById(ID)
-}
-
-function getToken() {
-    const storedToken = localStorage.getItem('TOKEN')
-    return storedToken ? storedToken : undefined
-}
-
-function isLoggedIn() {
-    return getToken() != undefined
-}
-
 function displayView() {
-    const root = document.getElementById('root')
-    
     if(!isLoggedIn()) {
-        root.innerHTML = id('welcome-view').textContent
+        ID('root').innerHTML = ID('welcome-view').innerHTML
         return
     }
 
-    root.innerHTML = id('profile-view').textContent
+    ID('root').innerHTML = ID('profile-view').innerHTML
+    clearFeedback()
     loadUserData('home')
     getAllPosts('post-container')
 }
 
 window.onload = () => displayView()
 
-function feedback(message, isError = true) {
-    const feedback = id('feedback')
-    feedback.innerHTML = message
-    feedback.style.background = isError ? 'red' : 'green'
-    feedback.style.display = 'block'    
-}
-
-function clearFeedback() {
-    id('feedback').style.display = 'none'
-}
-
 async function handleLogin(event)  {
-    event.preventDefault()
-    const email = document.getElementById('login-email').value
-    const password = document.getElementById('login-password').value
+    event.preventDefault()   
+    const { email, password } = getFormInput(event)
    
     try {
         const result = await requests.post('/sign_in', {email, password}) 
@@ -59,6 +33,10 @@ async function signOut() {
 
 function handleSignUp(event) {
     event.preventDefault()
+
+    console.log(getFormInput(event))
+
+    return
     const pw1 = document.getElementById("pw1").value
     const pw2 = document.getElementById("pw2").value
 

@@ -2,7 +2,7 @@
 
 <head>
     <link href="./static/styles.css" type="text/css" rel="stylesheet" />
-    <script src="./static/requests.js"></script>
+    <script src="./static/helpers.js"></script>
     <script src="./static/index.js"></script>
 </head>
 
@@ -11,7 +11,7 @@
     <div id="root"></div>
 
 
-    <script type="text/view" id="welcome-view">
+    <template id="welcome-view">
         <div id="bigboy">
             <div id="logo-slogan">
                 <img src="./static/wimage.png" />
@@ -20,10 +20,10 @@
                 <div id="login">
                     <form onsubmit="handleLogin(event)">
                         <div class="input-field">
-                            Email: <input id="login-email" type="text" required />
+                            Email: <input name="email" type="text" required />
                         </div>
                         <div class="input-field">
-                            Password: <input id="login-password" type="password" length="10"  pattern=".{8,}" required  />
+                            Password: <input name="password" type="password" length="10"  pattern=".{8,}" required  />
                         </div>
                         <div class="input-buttom">
                             <input type="submit" value="login" />
@@ -36,32 +36,32 @@
                     <h2>Sign up here</h2>
                     <form onsubmit="handleSignUp(event)">
                         <div class="input-field">
-                            First name: <input id="firstname" type="text" required value="a" />
+                            First name: <input name="firstname" type="text" required value="a" />
                         </div>
                         <div class="input-field">
-                            Family name: <input id="familyname" type="text" required value="a" />
+                            Family name: <input name="familyname" type="text" required value="a" />
                         </div>
                         <div class="input-field">
                             Gender:
-                            <select id="gender">
+                            <select name="gender">
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                             </select>
                         </div>
                         <div class="input-field">
-                            City: <input id="city" type="text" required value="a" />
+                            City: <input name="city" type="text" required value="a" />
                         </div>
                         <div class="input-field">
-                            Country: <input id="country" type="text" required value="a" />
+                            Country: <input name="country" type="text" required value="a" />
                         </div>
                         <div class="input-field">
-                            Email: <input id="email" type="email" required value="a@a"/>
+                            Email: <input name="email" type="email" required value="a@a"/>
                         </div>
                         <div class="input-field">
-                            Password: <input type="password" id="pw1" required minlength="8" />
+                            Password: <input type="password" name="pw1" required minlength="8" value="aaaaaaaa" />
                         </div>
                         <div class="input-field">
-                            Repeat PW: <input type="password" id="pw2" required  minlength="8" />
+                            Repeat PW: <input type="password" name="pw2" required  minlength="8" value="aaaaaaaa" />
                         </div>
                         <div class="input-buttom">
                             <input type="submit" value="SignUp" />
@@ -71,9 +71,9 @@
                 </div>
             </div>
         </div>
-    </script>
+    </template>
 
-    <script type="text/view" id="profile-view">
+    <template id="profile-view">
     
         <div id="profileview">
             <div id="nav">
@@ -176,7 +176,7 @@
     
             </div>
         </div>
-    </script>
+    </template>
 </body>
 
 </html>
