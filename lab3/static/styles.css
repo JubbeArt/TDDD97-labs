@@ -116,14 +116,14 @@ button, input[type="submit"] {
     border: 0;
     background: white;
     box-sizing: border-box;
-    box-shadow: #82828266 10px 10px;
+    box-shadow: #82828266 5px 5px;
     transition: 0.2s ease;
     cursor: pointer;
 }
 
-button, input[type="submit"]  {
+button:active, input[type="submit"]:active  {
     background: whitesmoke;
-    transform: translateY(8px) translateX(8px);
+    transform: translateY(4px) translateX(4px);
     box-shadow: #82828266 2px 2px; 
 }
 
