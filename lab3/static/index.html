@@ -90,7 +90,7 @@
         
             <h2>New message</h2>
             <form onsubmit="sendPost(event)">
-                <textarea name="message" cols="50" rows="5"></textarea>
+                <textarea name="message" cols="50" rows="5" required></textarea>
                 <input type="submit" value="Post message" />
             </form>
             <hr>
@@ -103,7 +103,6 @@
         <!-- BROWSE -->
         <div id="browse">
             <h2>Look up users</h2>
-                
             <form onsubmit="browseUser(event)">
                 <div class="input-field">
                     Email: <input name="email" type="email" required />
