@@ -89,13 +89,8 @@ def post_message(token):
     return status('', 'Post posted.', 201)
     
 
-import gevent.monkey
-gevent.monkey.patch_all()
-
-from gevent.wsgi import WSGIServer
+from gevent.pywsgi import WSGIServer
 
 dh.teardown_db(app)
 http_server = WSGIServer(('', 5000), app)
 http_server.serve_forever()
-
-#app.run(debug=True)
