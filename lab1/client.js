@@ -17,8 +17,6 @@ displayView = function () {
 
 window.onload = function () {
     displayView()
-    // loadUserData()  // d(^.^)b
-    // getAllPosts() // ~-~
 }
 
 function displayFeedback(message, id, isError = true) {

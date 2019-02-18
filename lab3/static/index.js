@@ -1,4 +1,4 @@
-function displayView() {
+async function displayView() {
     if(!isLoggedIn()) {
         ID('root').innerHTML = ID('welcome-view').innerHTML
         return
@@ -6,8 +6,8 @@ function displayView() {
 
     ID('root').innerHTML = ID('profile-view').innerHTML
     clearFeedback()
-    getUserData()
-    getUserPosts()
+    await getUserData()
+    await getUserPosts()
 }
 
 window.onload = displayView
@@ -99,12 +99,15 @@ async function sendPost(event) {
 
 // ----------------------- BROWSE ----------------------
 
+let lastEmail
+
 async function browseUser(event) {
     const input = getFormInput(event)
 
     try {
         const data = await requests.post('/get_user_data_by_email', input)
         const posts = await requests.post('/get_user_messages_by_email', input)
+        lastEmail = input.email
         
         ID('user-page').style.display = 'block'
         ID('other-user-data').innerHTML = userDataToHTML(data)
@@ -120,12 +123,13 @@ function reloadUserData() {
     ID('user-lookup').click()
 }
 
-// NOT DONE YET
-function sendUserPost() {
-    const message = document.getElementById("msnbs2").value
-    requests.post('/post_message', {message, email}, false)
-    getOtherUserPosts('user-post-container', email)
-}
+async function postMessageToUser(event) {
+    const {message} = getFormInput(event)
+    await requests.post('/post_message', {message, email: lastEmail}, false)
+    // fetch other users posts
+    const posts = await requests.post('/get_user_messages_by_email', {email: lastEmail})
+    ID('other-user-posts').innerHTML = postsToHTML(posts)
+ }
 
 
 // ----------------------- PROFILE ----------------------------

@@ -4,8 +4,6 @@ from helpers import login_required, status, error_status
 
 app = Flask(__name__, static_url_path='/static')
 
-# TODO: Add error checks where needed and don't assume db-helper always succeeds
-
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -62,6 +60,7 @@ def get_user_data_by_token(token):
 
 @app.route("/get_user_data_by_email", methods=['POST'])
 @login_required
+#@required_fields(['email'])
 def get_user_data_by_email(_):
     data = dh.get_user_data_by_email(request.json['email'])
     if data:
@@ -89,5 +88,14 @@ def post_message(token):
     dh.post_message(token, email, message)
     return status('', 'Post posted.', 201)
     
+
+import gevent.monkey
+gevent.monkey.patch_all()
+
+from gevent.wsgi import WSGIServer
+
 dh.teardown_db(app)
-app.run(debug=True)
+http_server = WSGIServer(('', 5000), app)
+http_server.serve_forever()
+
+#app.run(debug=True)

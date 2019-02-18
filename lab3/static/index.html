@@ -116,8 +116,10 @@
                 <hr>
 
                 <h2>New message to user</h2>
-                <textarea name="message" cols="50" rows="5"></textarea>
-                <button style="display: block" onclick="">Post message</button>
+                <form onsubmit="postMessageToUser(event)">
+                    <textarea name="message" cols="50" rows="5"></textarea>
+                    <input type="submit" value="Post message"/>
+                </form>
                 <hr>
 
                 <h2>All messages</h2>
