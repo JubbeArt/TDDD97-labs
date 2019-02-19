@@ -24,10 +24,13 @@ def execute_db(query: str, args=()):
     cursor.close()
 
 def login(email: str, password: str):
-    #tokens = query_db('SELECT token FROM tokens WHERE email = ?', [email])
     db_password = query_db('SELECT password FROM users WHERE email = ?', [email])
     
     if db_password[0] == password:
+        # Send message to all with email x
+        # delete old tokens ... profit
+
+        execute_db('DELETE FROM tokens WHERE email = ?', [email]) 
         token = generate_token()
         execute_db('INSERT INTO tokens VALUES (?, ?)', [token , email]) 
         return token

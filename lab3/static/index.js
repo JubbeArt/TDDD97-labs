@@ -1,3 +1,20 @@
+let connection
+
+function createSocket() {
+    connection = new WebSocket('ws://localhost:5000/log_in')
+
+    connection.onopen = () => {
+        console.log('awdawsasadawerwa432')
+        connection.send(getToken())
+    }
+
+    connection.onmessage = (message) => {
+        console.log('Got message. GET OUT!', message)
+        removeToken()
+        displayView()
+    } 
+}
+
 async function displayView() {
     if(!isLoggedIn()) {
         ID('root').innerHTML = ID('welcome-view').innerHTML
@@ -6,11 +23,21 @@ async function displayView() {
 
     ID('root').innerHTML = ID('profile-view').innerHTML
     clearFeedback()
-    await getUserData()
-    await getUserPosts()
+    try {
+        await getUserData()
+        await getUserPosts()
+    } catch(err) {
+        // not logged in
+        removeToken()
+        displayView()
+    }
 }
 
-window.onload = displayView
+window.onload = () => { 
+    displayView()
+    if( isLoggedIn() && !connection )
+        createSocket()
+}
 
 // ------------------- WELCOME VIEW -------------------------
 
@@ -21,9 +48,10 @@ async function handleLogin(event)  {
         const result = await requests.post('/sign_in', {email, password}) 
         localStorage.setItem('TOKEN', result.token)
         displayView()
+        createSocket()
     } catch(err) {
         feedback(err)  
-    }   
+    }  
 }
 
 async function handleSignUp(event) {
@@ -119,7 +147,6 @@ async function browseUser(event) {
 }
 
 function reloadUserData() {
-    // lel
     ID('user-lookup').click()
 }
 

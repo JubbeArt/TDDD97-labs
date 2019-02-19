@@ -1,8 +1,27 @@
 from flask import Flask, jsonify, request, send_from_directory
 import database_helper as dh
 from helpers import login_required, status, error_status
+from flask_sockets import Sockets
+from geventwebsocket.handler import WebSocketHandler
 
 app = Flask(__name__, static_url_path='/static')
+sockets = Sockets(app)
+
+opensockets = {}
+
+# {
+#     "a@a": websock,
+#     "a@a": None
+# }
+
+@sockets.route('/log_in')
+def echo_socket(ws):
+    token = ws.receive()
+    email = dh.get_email_by_token(token)
+    opensockets[email] = ws
+
+    while not ws.closed:
+        ws.receive()
 
 @app.route('/')
 def index():
@@ -11,9 +30,13 @@ def index():
 @app.route("/sign_in", methods=['POST'])
 def sign_in():
     data = request.json
-    token = dh.login(data['email'], data['password'])
+    email = data['email']
+    token = dh.login(email, data['password'])
 
     if token:
+        if email in opensockets and not opensockets[email].closed:
+            opensockets[email].send('msg')
+            opensockets[email] = None
         return status({'token': token}, "Successfully signed in.")
     else:
         return error_status(400, "Wrong username or password.")
@@ -92,5 +115,6 @@ def post_message(token):
 from gevent.pywsgi import WSGIServer
 
 dh.teardown_db(app)
-http_server = WSGIServer(('', 5000), app)
+http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
 http_server.serve_forever()
+

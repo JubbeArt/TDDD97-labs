@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS tokens (
     token TEXT PRIMARY KEY,
-    email TEXT UNIQUE,
+    email TEXT,
     FOREIGN KEY (email) REFERENCES users (email)
 );
 
