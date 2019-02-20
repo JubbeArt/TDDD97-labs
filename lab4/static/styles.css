@@ -1,0 +1,135 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: dodgerblue;
+    font-family: sans-serif;
+}
+
+#root {
+    width: 80%;
+    margin: 50px auto 0 auto;
+    display: block;
+    max-width: 1000px;
+    margin-bottom: 32px;
+}
+
+#feedback {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    font-size: 23px;
+    color: white;
+    text-align: center;
+    padding: 6px 0;
+}
+
+#home, #browse, #account {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+#home {
+    background: yellow;
+}
+
+#browse {
+    background: darkgoldenrod; 
+}
+
+#account {
+    background: orange; 
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+}
+
+.tab {
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    font-size: 23px;
+    margin: 0 10px;
+    border-radius: 10px 37px;
+}
+
+ul {
+    margin:0;
+}
+
+.post {
+    border: 1px solid black;
+    padding: 10px;
+    background: hotpink;
+    color: white;
+    margin: 20px;
+    border-radius: 3px;
+}
+
+h2 {
+    margin: 13px 0 10px;
+    text-align: center;
+    text-decoration: underline;
+    color: darkslategrey;
+}
+
+
+form {
+    padding: 10px;
+}
+
+.input-field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.input-buttom {
+    display: flex;
+    justify-content: flex-end;box-sizing: border-box; 
+}
+
+input[type="text"], input[type="password"], select, input[type="email"] {
+    width: 120px;
+}
+
+
+button, input[type="submit"] {
+    height: 35px;
+    /* width: 82%; */
+    padding: 0 69px;
+    font-size: 19px;
+    font-weight: bold;
+    margin: 7px auto;
+    margin-bottom: 20px;
+    cursor: pointer;
+    display: block;
+    border-radius: 50px;
+    border: 0;
+    background: white;
+    box-sizing: border-box;
+    box-shadow: #82828266 5px 5px;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+button:active, input[type="submit"]:active  {
+    background: whitesmoke;
+    transform: translateY(4px) translateX(4px);
+    box-shadow: #82828266 2px 2px; 
+}
+
+#old-password, #reset-password1, #reset-password2, #browse-email {
+    width: 250px;
+}
+
+textarea {
+    width: 100%;
+}
