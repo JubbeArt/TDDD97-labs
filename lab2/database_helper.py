@@ -24,11 +24,13 @@ def execute_db(query: str, args=()):
     cursor.close()
 
 def login(email: str, password: str):
-    #tokens = query_db('SELECT token FROM tokens WHERE email = ?', [email])
     db_password = query_db('SELECT password FROM users WHERE email = ?', [email])
     
-    #  
     if db_password[0] == password:
+        # Send message to all with email x
+        # delete old tokens ... profit
+
+        execute_db('DELETE FROM tokens WHERE email = ?', [email]) 
         token = generate_token()
         execute_db('INSERT INTO tokens VALUES (?, ?)', [token , email]) 
         return token
@@ -50,17 +52,19 @@ def change_password(token: str, old_password: str, new_password: str):
         return True
     return False
   
+
 def get_user_data_by_email(email: str):
     data = query_db('SELECT email, firstname, familyname, gender, city, country FROM users WHERE email=?', [email])
-    json_response =  {
-        'email': data[0],
-        'firstname':data[1],
-        'familyname':data[2], 
-        'gender': 'Male' if data[3] else 'Female', 
-        'city':data[4], 
-        'country': data[5]
-    }
-    return jsonify(json_response)
+    if data:
+        return {
+            'email': data[0],
+            'firstname':data[1],
+            'familyname':data[2], 
+            'gender': 'Male' if data[3] else 'Female', 
+            'city':data[4], 
+            'country': data[5]
+        }
+    return None
 
 def get_email_by_token(token: str):
     return query_db('SELECT email FROM tokens WHERE token=?', [token])[0]
@@ -73,9 +77,14 @@ def get_user_data_by_token(token: str):
     return get_user_data_by_email(email)
 
 def sign_up(email: str, password: str, firstname: str, familyname: str, gender: str, city: str, country: str):
-    gender = 1 if gender == "Male" or gender == "male" or gender == "1" else 0
-    execute_db('INSERT INTO users VALUES (?,?,?,?,?,?,?)', [email, firstname, familyname, password, city, country, gender]) 
+    genderNum = 1 if gender == "Male" or gender == "male" or gender == "1" else 0
 
+    # email already exsits
+    if query_db('SELECT COUNT(*) FROM users WHERE email = ?', [email], True)[0] == 1:
+        return False
+
+    execute_db('INSERT INTO users VALUES (?,?,?,?,?,?,?)', [email, firstname, familyname, password, city, country, genderNum]) 
+    return True
 
 def is_valid_token(token: str):
     if query_db('SELECT token FROM tokens WHERE token=?', [token]):
@@ -84,6 +93,10 @@ def is_valid_token(token: str):
 
 
 def get_messages_by_email(email: str):
+    # email does not exist
+    if query_db('SELECT COUNT(*) FROM users WHERE email = ?', [email])[0] == 0: 
+        return False
+
     data = query_db('SELECT message, author FROM messages WHERE email=?', [email], False)
     
     if not data:
@@ -109,7 +122,7 @@ def get_messages_by_token(token: str):
 def post_message(token, email, message):
     author = get_email_by_token(token)
     execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
-    return ''
+    
 
 def get_db():
     db = getattr(g, '_database', None)
