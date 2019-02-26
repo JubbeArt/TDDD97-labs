@@ -4,15 +4,13 @@ function createSocket() {
     connection = new WebSocket('ws://localhost:5000/log_in')
 
     connection.onopen = () => {
-        console.log('awdawsasadawerwa432')
         connection.send(getToken())
     }
 
     connection.onmessage = (message) => {
-        console.log('Got message. GET OUT!', message)
         removeToken()
         displayView()
-    } 
+    }
 }
 
 async function displayView() {
@@ -133,8 +131,8 @@ async function browseUser(event) {
     const input = getFormInput(event)
 
     try {
-        const data = await requests.post('/get_user_data_by_email', input)
-        const posts = await requests.post('/get_user_messages_by_email', input)
+        const data = await requests.get(`/get_user_data_by_email?email=${input.email}`)
+        const posts = await requests.get(`/get_user_messages_by_email?email=${input.email}`)
         lastEmail = input.email
         
         ID('user-page').style.display = 'block'
@@ -154,7 +152,7 @@ async function postMessageToUser(event) {
     const {message} = getFormInput(event)
     await requests.post('/post_message', {message, email: lastEmail}, false)
     // fetch other users posts
-    const posts = await requests.post('/get_user_messages_by_email', {email: lastEmail})
+    const posts = await requests.get(`/get_user_messages_by_email?email=${lastEmail}`)
     ID('other-user-posts').innerHTML = postsToHTML(posts)
  }
 

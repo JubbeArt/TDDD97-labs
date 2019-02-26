@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, send_from_directory
 import database_helper as dh
-from helpers import login_required, status, error_status
+from helpers import login_required, validate_email_format, required_fields, status, error_status
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 
@@ -10,15 +10,19 @@ sockets = Sockets(app)
 opensockets = {}
 
 # {
-#     "a@a": websock,
-#     "a@a": None
+#     "a@a": [websock],
+#     "a@a": []
 # }
 
 @sockets.route('/log_in')
 def echo_socket(ws):
     token = ws.receive()
     email = dh.get_email_by_token(token)
-    opensockets[email] = ws
+    
+    if email in opensockets:
+        opensockets[email].append(ws)
+    else:
+        opensockets[email] = [ws]
 
     while not ws.closed:
         ws.receive()
@@ -28,15 +32,18 @@ def index():
     return app.send_static_file('index.html')
 
 @app.route("/sign_in", methods=['POST'])
+@required_fields(['email', 'password'])
 def sign_in():
     data = request.json
     email = data['email']
     token = dh.login(email, data['password'])
 
     if token:
-        if email in opensockets and not opensockets[email].closed:
-            opensockets[email].send('msg')
-            opensockets[email] = None
+        if email in opensockets:
+            for  socket in opensockets[email]:
+                if not socket.closed:
+                    socket.send('msg')
+            opensockets[email] = []
         return status({'token': token}, "Successfully signed in.")
     else:
         return error_status(400, "Wrong username or password.")
@@ -49,14 +56,10 @@ def sign_out(token):
 
     
 @app.route("/sign_up", methods=['POST'])
+@validate_email_format
+@required_fields(['email', 'password', 'firstname', 'familyname', 'gender', 'city', 'country'])
 def sign_up():
-
     data = request.json
-    values = ['email', 'password', 'firstname', 'familyname', 'gender', 'city', 'country']
-
-    for v in values:
-        if v not in data:
-            return error_status(400, f'Missing field {v}.')
 
     if len(data['password']) <= 7:
         return error_status(400, 'Password too short.')
@@ -68,10 +71,12 @@ def sign_up():
 
 @app.route("/change_password", methods=['POST'])
 @login_required
+@required_fields(['oldPassword', 'newPassword'])
 def change_password(token):
     data = request.json
-    print('HERE', data)
-    
+
+    if len(data['newPassword']) <= 7:
+        return error_status(400, 'Password too short.')    
     if dh.change_password(token, data['oldPassword'], data['newPassword']):
         return status('')
     return error_status(401, 'Wrong password.')
@@ -81,21 +86,28 @@ def change_password(token):
 def get_user_data_by_token(token):
     return jsonify(dh.get_user_data_by_token(token))
 
-@app.route("/get_user_data_by_email", methods=['POST'])
+@app.route("/get_user_data_by_email")
 @login_required
-#@required_fields(['email'])
+@required_fields(['email'])
+@validate_email_format
 def get_user_data_by_email(_):
-    data = dh.get_user_data_by_email(request.json['email'])
+    data = dh.get_user_data_by_email(request.args['email'])
     if data:
         return status(data)
     
     return error_status(400, 'User not found')
 
 
-@app.route("/get_user_messages_by_email", methods=['POST'])
+@app.route("/get_user_messages_by_email")
 @login_required
+@required_fields(['email'])
+@validate_email_format
 def get_user_messages_by_email(_):
-    return dh.get_messages_by_email(request.json['email'])
+    response = dh.get_messages_by_email(request.args['email'])
+
+    if response:
+        return response
+    return error_status(400, 'User not found')
 
 @app.route("/get_user_messages_by_token")
 @login_required
@@ -105,6 +117,7 @@ def get_user_messages_by_token(token):
 
 @app.route("/post_message", methods=['POST'])
 @login_required
+@required_fields(['email', 'message'])
 def post_message(token): 
     email = request.json['email']
     message = request.json['message']

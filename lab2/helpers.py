@@ -19,7 +19,6 @@ def login_required(function):
     return decorated_function
 
 
-
 def required_fields(fields):
     def actual_decorator(function):
         @wraps(function)
