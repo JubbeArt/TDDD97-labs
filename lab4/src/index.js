@@ -7,18 +7,7 @@ import Home from './components/home'
 import Login from './components/login'
 import Stats from './components/stats'
 import { requests } from './helpers'
-
-const Feedback = (props) => {
-  const { isError, message } = props
-
-  if (message !== '' && message !== ' ') {
-    return (
-      <div id='feedback' style={{ background: isError ? 'red' : 'green' }}>{message}</div>
-    )
-  } else {
-    return null
-  }
-}
+import Feedback from './components/Feedback'
 
 class App extends React.Component {
   constructor () {
@@ -66,6 +55,11 @@ class App extends React.Component {
   removeToken () {
     localStorage.removeItem('TOKEN')
     this.setState({ token: null })
+
+    if (this.socket) {
+      this.socket.close()
+      this.socket = null
+    }
   }
 
   setToken (token) {
