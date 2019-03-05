@@ -28,7 +28,7 @@ body {
     padding: 6px 0;
 }
 
-#home, #browse, #account {
+#home, #browse, #account, #stats {
     padding: 20px;
     margin-top: 20px;
     border-radius: 5px;
@@ -44,6 +44,10 @@ body {
 
 #account {
     background: orange; 
+}
+
+#stats {
+    background: hotpink;
 }
 
 .tabs {

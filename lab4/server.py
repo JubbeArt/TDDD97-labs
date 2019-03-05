@@ -3,11 +3,16 @@ import database_helper as dh
 from helpers import login_required, validate_email_format, required_fields, status, error_status
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
+import json
 
 app = Flask(__name__, static_url_path='/static')
 sockets = Sockets(app)
 
+from flask_cors import CORS
+CORS(app)
+
 opensockets = {}
+
 
 # {
 #     "a@a": [websock],
@@ -24,8 +29,11 @@ def echo_socket(ws):
     else:
         opensockets[email] = [ws]
 
+    ws.send(json.dumps({"type": "users", "data": 23}))
+
     while not ws.closed:
         ws.receive()
+
 
 @app.route('/')
 def index():

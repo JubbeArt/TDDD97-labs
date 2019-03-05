@@ -1,2 +1,2 @@
-source .venv/bin/activate
-python lab3/server.py
+source ../.venv/bin/activate
+python server.py

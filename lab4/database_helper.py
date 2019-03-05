@@ -122,13 +122,20 @@ def get_messages_by_token(token: str):
 def post_message(token, email, message):
     author = get_email_by_token(token)
     execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
-    
+
+
+## sockets
+def get_users_online():
+    res = query_db('SELECT COUNT(*) FROM tokens')
+    print(res)
+
 
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
     return db
+
 
 def teardown_db(app):
     @app.teardown_appcontext
