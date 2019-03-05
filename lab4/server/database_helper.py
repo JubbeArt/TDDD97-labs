@@ -65,7 +65,10 @@ def get_user_data_by_email(email: str):
     return None
 
 def get_email_by_token(token: str):
-    return query_db('SELECT email FROM tokens WHERE token=?', [token])[0]
+    res = query_db('SELECT email FROM tokens WHERE token=?', [token])
+    return res[0] if res else None
+
+
 
 
 def get_user_data_by_token(token: str):

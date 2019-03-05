@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
   output: {
-    path: path.join(__dirname, 'static', 'dist')
+    path: path.join(__dirname, 'static')
   },
   devtool: 'eval',
   module: {

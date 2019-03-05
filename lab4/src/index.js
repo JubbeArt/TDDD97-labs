@@ -5,7 +5,7 @@ import Browse from './components/browse'
 import Account from './components/account'
 import Home from './components/home'
 import Login from './components/login'
-import Stats from './components/stats';
+import Stats from './components/stats'
 
 const Feedback = (props) => {
   const { isError, message } = props
@@ -32,7 +32,7 @@ function App () {
 
   useEffect(() => {
     console.log('token changed')
-    if(!token) {
+    if (!token) {
       return
     }
 
@@ -41,9 +41,9 @@ function App () {
     connection.onopen = () => connection.send(token)
     connection.onmessage = (message) => {
       message = JSON.parse(message.data)
-      const {type, data} = message
+      const { type, data } = message
 
-      if(type === 'logout') {
+      if (type === 'logout') {
         removeToken()
       } else if (type === 'stats') {
         setConcurrentUsers(data.concurrent_users)
@@ -51,10 +51,9 @@ function App () {
         setNumberOfPosts(data.number_of_posts)
         console.log('GOT NEW STATS FROM SERVER', data)
       }
-      // 
+      //
       // displayView()
     }
-    
   }, [token])
 
   const setToken2 = (token) => {
@@ -74,7 +73,6 @@ function App () {
     setMessage('')
   }
 
-
   if (token !== null) {
     return (
       <>
@@ -90,10 +88,10 @@ function App () {
           <Route path='/home' render={() => <Home feedback={feedback} clearFeedback={clearFeedback} />} />
           <Route path='/browse' render={() => <Browse feedback={feedback} clearFeedback={clearFeedback} />} />
           <Route path='/account' render={() => <Account feedback={feedback} clearFeedback={clearFeedback} removeToken={removeToken} />} />
-          <Route path='/stats' render={() => <Stats 
+          <Route path='/stats' render={() => <Stats
             concurrentUsers={concurrentUsers}
             viewers={viewers}
-            feedback={feedback} 
+            feedback={feedback}
             numberOfPosts={numberOfPosts}
             clearFeedback={clearFeedback} />} />
         </Switch>
@@ -102,10 +100,10 @@ function App () {
   }
 
   return (
-    <div id='stats'>
+    <>
       <Feedback isError={isError} message={message} />
       <Login setToken={setToken2} feedback={feedback} clearFeedback={clearFeedback} />
-    </div>
+    </>
   )
 }
 

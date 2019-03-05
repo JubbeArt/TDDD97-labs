@@ -1,14 +1,15 @@
 from flask import Flask, jsonify, request, send_from_directory
 import database_helper as dh
+from typing import Dict, List
 from helpers import login_required, validate_email_format, required_fields, status, error_status
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 import json
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path='/static', static_folder='../static')
 sockets = Sockets(app)
 
-opensockets = {}
+opensockets: Dict[str, List] = {}
 
 # {
 #     "a@a": [websock1, websocket2],
@@ -16,10 +17,16 @@ opensockets = {}
 # }
 
 @sockets.route('/log_in')
-def echo_socket(ws):
+def login_socket(ws):
     token = ws.receive()
     email = dh.get_email_by_token(token)
+
+    # user not logged in => bail out
+    if not email:
+        print('USER TRIED TO CONNECT WITH SOCKET, BUT TOKEN WAS INVALID')
+        return
     
+    # save socket for later use
     if email in opensockets:
         opensockets[email].append(ws)
     else:
@@ -55,9 +62,13 @@ def notify_all_sockets():
 
 
 @app.route('/')
+@app.route('/home')
+@app.route('/browse')
+@app.route('/account')
+@app.route('/stats')
 def index():
     #notify_all_sockets()
-    return app.send_static_file('./static/index.html')
+    return app.send_static_file('index.html')
 
 @app.route("/sign_in", methods=['POST'])
 @required_fields(['email', 'password'])
@@ -68,13 +79,14 @@ def sign_in():
 
     if token:
         if email in opensockets:
-            for  socket in opensockets[email]:
+            for socket in opensockets[email]:
                 if not socket.closed:
                     socket.send(json.dumps({'type': 'logout'}))
             opensockets[email] = []
         return status({'token': token}, "Successfully signed in.")
     else:
         return error_status(400, "Wrong username or password.")
+
 
 @app.route("/sign_out")
 @login_required
