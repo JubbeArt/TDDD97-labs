@@ -8,23 +8,16 @@ export default class Stats extends React.Component {
     }
   }
 
-  componentDidMount () {
-    this.drawChart('chart', [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers])
-  }
+  setUpChart () {
+    const context = document.getElementById('chart').getContext('2d')
 
-  drawChart (id, data) {
-    if (!document.getElementById(id)) {
-      return
-    }
-
-    const context = document.getElementById(id).getContext('2d')
-    const chart = new Chart(context, {
+    this.chart = new Chart(context, {
       type: 'bar',
       data: {
         labels: ['Viewers', 'Number of posts', 'Concurrent users'],
         datasets: [{
           label: 'Live data',
-          data: data,
+          data: [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers],
           backgroundColor: [
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
@@ -41,8 +34,23 @@ export default class Stats extends React.Component {
     })
   }
 
+  updateChart () {
+    if (!this.chart) return
+    // ye....
+    this.chart.data.datasets[0].data = [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers]
+    this.chart.update()
+  }
+
+  componentDidMount () {
+    this.setUpChart()
+  }
+
+  componentWillUnmount () {
+    this.chart = null
+  }
+
   render () {
-    this.drawChart('chart', [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers])
+    this.updateChart()
     return (
       <div id='stats'>
         <canvas width='400' height='400' id='chart' />

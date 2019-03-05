@@ -81,9 +81,10 @@ class App extends React.Component {
         this.setState({
           concurrentUsers: data.concurrent_users,
           viewers: data.viewers,
-          numberOfPosts: data.numberOfPosts
+          numberOfPosts: data.number_of_posts
         })
-        console.log('GOT NEW STATS FROM SERVER', message)
+        console.log('GOT NEW STATS FROM SERVER', type)
+        console.log(message.data)
       }
     }
   }
