@@ -93,6 +93,10 @@ def is_valid_token(token: str):
 
 
 def get_messages_by_email(email: str):
+   # email does not exist
+    if query_db('SELECT COUNT(*) FROM users WHERE email = ?', [email])[0] == 0: 
+        return False
+
     data = query_db('SELECT message, author FROM messages WHERE email=?', [email], False)
     
     if not data:
