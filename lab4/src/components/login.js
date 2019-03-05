@@ -22,7 +22,6 @@ export default class extends React.Component {
 
     if (input.password !== input.password2) {
       this.props.feedback('Passwords needs to match')
-      return
     }
 
     try {
@@ -41,7 +40,7 @@ export default class extends React.Component {
         </div>
         <div id='smallboy'>
           <div id='login'>
-            <form onSubmit={() => this.handleLogin(event)}>
+            <form onSubmit={(event) => this.handleLogin(event)}>
               <div className='input-field'>
                             Email: <input name='email' type='text' required />
               </div>
@@ -49,7 +48,7 @@ export default class extends React.Component {
                             Password: <input name='password' type='password' length='10' pattern='.{8,}' required />
               </div>
               <div className='input-buttom'>
-                <input type='submit' defaultValue='login' />
+                <input type='submit' value='login' />
               </div>
             </form>
 
@@ -86,7 +85,7 @@ export default class extends React.Component {
                             Repeat PW: <input type='password' name='password2' required minLength='8' defaultValue='aaaaaaaa' />
               </div>
               <div className='input-buttom'>
-                <input type='submit' defaultValue='SignUp' />
+                <input type='submit' value='SignUp' />
               </div>
             </form>
           </div>

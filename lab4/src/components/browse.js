@@ -46,7 +46,7 @@ export default class Browse extends React.Component {
           <div className='input-field'>
                     Email: <input name='email' type='email' required />
           </div>
-          <input type='submit' id='user-lookup' defaultValue='Look up user' />
+          <input type='submit' id='user-lookup' value='Look up user' />
         </form>
 
         <div id='user-page' style={{ display: this.state.data ? 'block' : 'none' }}>
@@ -59,7 +59,7 @@ export default class Browse extends React.Component {
           <h2>New message to user</h2>
           <form onSubmit={event => this.postMessageToUser(event)}>
             <textarea className='message' name='message' cols='50' rows='5' />
-            <input type='submit' defaultValue='Post message' />
+            <input type='submit' value='Post message' />
           </form>
           <hr />
 
