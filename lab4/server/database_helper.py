@@ -129,8 +129,7 @@ def post_message(token, email, message):
 
 def add_viewer(email):
     res = query_db('SELECT viewers FROM viewers WHERE email = ?', [email])
-    print(res)
-
+    
     ## VIEWER ROW DOES NOT EXISTS
     if not res:
         execute_db('INSERT INTO viewers (viewers, email) VALUES (1, ?)', [email])
@@ -147,12 +146,7 @@ def get_number_of_posts(email):
 
 def get_viewers(email):
     res = query_db('SELECT viewers FROM viewers WHERE email = ?', [email])
-    
-    ## row does not exists
-    if res == None:
-        return 0
-
-    return res[0]
+    return res[0] if res else res
 
 def get_db():
     db = getattr(g, '_database', None)

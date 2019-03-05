@@ -12,8 +12,9 @@ sockets = Sockets(app)
 opensockets: Dict[str, List] = {}
 
 # {
-#     "a@a": [websock1, websocket2],
-#     "b@a": []
+#     "a@a": [websocket1, websocket2],
+#     "b@a": [],
+#     "c@a": [websocket]
 # }
 
 @sockets.route('/log_in')
@@ -32,21 +33,22 @@ def login_socket(ws):
     else:
         opensockets[email] = [ws]
 
-    data = {
-        "concurrent_users": dh.get_users_online(),
-        "number_of_posts": dh.get_number_of_posts(email),
-        "viewers": dh.get_viewers(email)
-    }
+    # data = {
+    #     "concurrent_users": dh.get_users_online(),
+    #     "number_of_posts": dh.get_number_of_posts(email),
+    #     "viewers": dh.get_viewers(email)
+    # }
 
-    ws.send(json.dumps({"type": "stats", "data": data}))
+    # ws.send(json.dumps({"type": "stats", "data": data}))
+    notify_all_sockets()
 
     while not ws.closed:
         ws.receive()
 
 def notify_all_sockets():
-    concurrent_users = dh.get_users_online()  
     print('NOTIFYING USERS!!!!!!!!!')
-
+    concurrent_users = dh.get_users_online()  
+    print('ye')
     for email in opensockets:
         viewers = dh.get_viewers(email)
         number_of_posts = dh.get_number_of_posts(email)
@@ -67,7 +69,6 @@ def notify_all_sockets():
 @app.route('/account')
 @app.route('/stats')
 def index():
-    #notify_all_sockets()
     return app.send_static_file('index.html')
 
 
@@ -99,6 +100,7 @@ def sign_in():
 @login_required
 def sign_out(token): 
     dh.logout(token)
+    notify_all_sockets()
     return ''
 
     
@@ -140,6 +142,8 @@ def get_user_data_by_token(token):
 def get_user_data_by_email(_):
     data = dh.get_user_data_by_email(request.args['email'])
     if data:
+        dh.add_viewer()
+        notify_all_sockets()
         return status(data)
     
     return error_status(400, 'User not found')
@@ -169,6 +173,7 @@ def post_message(token):
     email = request.json['email']
     message = request.json['message']
     dh.post_message(token, email, message)
+    notify_all_sockets()
     return status('', 'Post posted.', 201)
     
 

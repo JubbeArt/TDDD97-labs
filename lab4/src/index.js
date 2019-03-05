@@ -37,7 +37,7 @@ class App extends React.Component {
 
     // validate token on mount
     try {
-      await requests.get('/validate_token')
+      await requests.get('/validate_token', false)
       this.setUpSocket()
     } catch (err) {
       this.removeToken()
@@ -45,7 +45,6 @@ class App extends React.Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    console.log('COMPOENNT DID UPDATE')
     // user logged in => setup socket
     if (prevState.token == null && this.state.token != null) {
       this.setUpSocket()
