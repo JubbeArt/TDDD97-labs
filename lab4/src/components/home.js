@@ -2,7 +2,7 @@ import React from 'react'
 import { requests, getFormInput, postsToHTML, userDataToHTML } from '../helpers'
 
 export default class Home extends React.Component {
-  constructor (props) {
+  constructor () {
     super()
 
     this.state = {

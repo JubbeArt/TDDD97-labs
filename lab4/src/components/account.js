@@ -28,18 +28,10 @@ export default class extends React.Component {
       <div id='account'>
         <h2>Change password</h2>
         <form id='reset-password-form' onSubmit={() => this.handleResetPassword(event)}>
-          <div className='input-field'>
-              Old password: <input name='oldPassword' type='password' length='10' pattern='.{8,}' required />
-          </div>
-          <div className='input-field'>
-              Password: <input name='newPassword' type='password' length='10' pattern='.{8,}' required />
-          </div>
-          <div className='input-field'>
-              Repeat password: <input name='newPassword2' type='password' length='10' pattern='.{8,}' required />
-          </div>
-          <div className='input-buttom'>
-            <input type='submit' defaultValue='Change password' />
-          </div>
+          <div className='input-field'>Old password: <input name='oldPassword' type='password' length='10' pattern='.{8,}' required /></div>
+          <div className='input-field'>Password: <input name='newPassword' type='password' length='10' pattern='.{8,}' required /></div>
+          <div className='input-field'>Repeat password: <input name='newPassword2' type='password' length='10' pattern='.{8,}' required /></div>
+          <div className='input-buttom'><input type='submit' defaultValue='Change password' /></div>
         </form>
         <button onClick={() => this.signOut()}>Sign-out</button>
       </div>

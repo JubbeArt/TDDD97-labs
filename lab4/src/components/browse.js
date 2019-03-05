@@ -43,9 +43,7 @@ export default class Browse extends React.Component {
       <div id='browse'>
         <h2>Look up users</h2>
         <form onSubmit={event => this.browseUser(event)}>
-          <div className='input-field'>
-                    Email: <input name='email' type='email' required />
-          </div>
+          <div className='input-field'>Email: <input name='email' type='email' required /></div>
           <input type='submit' id='user-lookup' value='Look up user' />
         </form>
 
@@ -70,6 +68,6 @@ export default class Browse extends React.Component {
           </div>
         </div>
       </div>
-        </>
+    </>
   }
 }
