@@ -70,6 +70,13 @@ def index():
     #notify_all_sockets()
     return app.send_static_file('index.html')
 
+
+@app.route('/validate_token')
+@login_required
+def validate_token(_):
+    return status(None)
+
+
 @app.route("/sign_in", methods=['POST'])
 @required_fields(['email', 'password'])
 def sign_in():

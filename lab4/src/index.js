@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom'
 import Browse from './components/browse'
@@ -6,6 +6,7 @@ import Account from './components/account'
 import Home from './components/home'
 import Login from './components/login'
 import Stats from './components/stats'
+import { requests } from './helpers'
 
 const Feedback = (props) => {
   const { isError, message } = props
@@ -19,64 +20,107 @@ const Feedback = (props) => {
   }
 }
 
-function App () {
-  const [token, setToken] = useState(localStorage.getItem('TOKEN'))
-  const [concurrentUsers, setConcurrentUsers] = useState(0)
-  const [viewers, setViewers] = useState(0)
-  const [numberOfPosts, setNumberOfPosts] = useState(0)
+class App extends React.Component {
+  constructor () {
+    super()
 
-  function removeToken () {
-    localStorage.removeItem('TOKEN')
-    setToken(null)
+    this.state = {
+      token: localStorage.getItem('TOKEN'),
+      // stats page
+      concurrentUsers: 0,
+      viewers: 0,
+      numberOfPosts: 0,
+      // feedback
+      message: '',
+      isError: false
+    }
+
+    this.removeToken = this.removeToken.bind(this)
+    this.setToken = this.setToken.bind(this)
+    this.feedback = this.feedback.bind(this)
+    this.clearFeedback = this.clearFeedback.bind(this)
   }
 
-  useEffect(() => {
-    console.log('token changed')
-    if (!token) {
+  async componentDidMount () {
+    if (this.state.token == null) {
       return
     }
 
-    const connection = new WebSocket('ws://localhost:5000/log_in')
+    // validate token on mount
+    try {
+      await requests.get('/validate_token')
+      this.setUpSocket()
+    } catch (err) {
+      this.removeToken()
+    }
+  }
 
-    connection.onopen = () => connection.send(token)
-    connection.onmessage = (message) => {
+  componentDidUpdate (prevProps, prevState) {
+    console.log('COMPOENNT DID UPDATE')
+    // user logged in => setup socket
+    if (prevState.token == null && this.state.token != null) {
+      this.setUpSocket()
+    }
+  }
+
+  removeToken () {
+    localStorage.removeItem('TOKEN')
+    this.setState({ token: null })
+  }
+
+  setToken (token) {
+    localStorage.setItem('TOKEN', token)
+    this.setState({ token })
+  }
+
+  setUpSocket () {
+    console.log('doing socket stuff...')
+    this.socket = new WebSocket('ws://localhost:5000/log_in')
+    this.socket.onopen = () => this.socket.send(this.state.token)
+
+    this.socket.onmessage = (message) => {
       message = JSON.parse(message.data)
       const { type, data } = message
 
       if (type === 'logout') {
-        removeToken()
+        this.removeToken()
       } else if (type === 'stats') {
-        setConcurrentUsers(data.concurrent_users)
-        setViewers(data.viewers)
-        setNumberOfPosts(data.number_of_posts)
+        this.setState({
+          concurrentUsers: data.concurrent_users,
+          viewers: data.viewers,
+          numberOfPosts: data.numberOfPosts
+        })
         console.log('GOT NEW STATS FROM SERVER', data)
       }
-      //
-      // displayView()
     }
-  }, [token])
-
-  const setToken2 = (token) => {
-    localStorage.setItem('TOKEN', token)
-    setToken(token)
   }
 
-  const [message, setMessage] = useState(' ')
-  const [isError, setIsError] = useState(false)
-
-  function feedback (newMessage, newIsError = true) {
-    setMessage(newMessage)
-    setIsError(newIsError)
+  feedback (message, isError = true) {
+    this.setState({ message, isError })
   }
 
-  function clearFeedback () {
-    setMessage('')
+  clearFeedback () {
+    this.setState({ message: '' })
   }
 
-  if (token !== null) {
+  render () {
+    const feedbackProps = {
+      feedback: this.feedback,
+      clearFeedback: this.clearFeedback
+    }
+
+    if (this.state.token == null) {
+      return (
+        <>
+          <Feedback isError={this.state.isError} message={this.state.message} />
+          <Login setToken={this.setToken} {...feedbackProps} />
+        </>
+      )
+    }
+
     return (
       <>
-        <Feedback isError={isError} message={message} />
+        <Feedback isError={this.state.isError} message={this.state.message} />
         <div className='tabs'>
           <Link to={'home'} className='tab' style={{ background: 'yellow' }}>Home</Link>
           <Link to={'browse'} className='tab' style={{ background: 'darkgoldenrod' }} >Browse</Link>
@@ -85,32 +129,26 @@ function App () {
         </div>
         <Switch>
           <Route exact path='/' render={() => <Redirect to='/home' />} />
-          <Route path='/home' render={() => <Home feedback={feedback} clearFeedback={clearFeedback} />} />
-          <Route path='/browse' render={() => <Browse feedback={feedback} clearFeedback={clearFeedback} />} />
-          <Route path='/account' render={() => <Account feedback={feedback} clearFeedback={clearFeedback} removeToken={removeToken} />} />
-          <Route path='/stats' render={() => <Stats
-            concurrentUsers={concurrentUsers}
-            viewers={viewers}
-            feedback={feedback}
-            numberOfPosts={numberOfPosts}
-            clearFeedback={clearFeedback} />} />
+          <Route path='/home' render={() => <Home {...feedbackProps} />} />
+          <Route path='/browse' render={() => <Browse {...feedbackProps} />} />
+          <Route path='/account' render={() => <Account {...feedbackProps} removeToken={this.removeToken} />} />
+          <Route path='/stats' render={() => (
+            <Stats
+              concurrentUsers={this.state.concurrentUsers}
+              numberOfPosts={this.state.numberOfPosts}
+              viewers={this.state.viewers}
+              {...feedbackProps} />
+          )}
+          />
         </Switch>
     </>
     )
   }
-
-  return (
-    <>
-      <Feedback isError={isError} message={message} />
-      <Login setToken={setToken2} feedback={feedback} clearFeedback={clearFeedback} />
-    </>
-  )
 }
 
 ReactDOM.render(
   <BrowserRouter basename={__dirname}>
     <App />
-  </BrowserRouter>
-  ,
+  </BrowserRouter>,
   document.getElementById('root')
 )
