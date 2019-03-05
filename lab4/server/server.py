@@ -8,20 +8,12 @@ import json
 app = Flask(__name__, static_url_path='/static')
 sockets = Sockets(app)
 
-from flask_cors import CORS
-CORS(app)
-
 opensockets = {}
 
-
 # {
-#     "a@a": [websock],
-#     "a@a": []
+#     "a@a": [websock1, websocket2],
+#     "b@a": []
 # }
-
-
-
-
 
 @sockets.route('/log_in')
 def echo_socket(ws):
@@ -53,21 +45,19 @@ def notify_all_sockets():
         number_of_posts = dh.get_number_of_posts(email)
 
         for socket in opensockets[email]:
-            print(email, socket,'is open:', not socket.closed)
-            if socket.closed:
-                continue
-
-            socket.send(json.dumps({
-                "concurrent_users": concurrent_users,
-                "number_of_posts": number_of_posts,
-                "viewers": viewers
-            }))
+            #print(email, socket,'is open:', not socket.closed)
+            if not socket.closed:                
+                socket.send(json.dumps({
+                    "concurrent_users": concurrent_users,
+                    "number_of_posts": number_of_posts,
+                    "viewers": viewers
+                }))
 
 
 @app.route('/')
 def index():
-    notify_all_sockets()
-    return app.send_static_file('index.html')
+    #notify_all_sockets()
+    return app.send_static_file('./static/index.html')
 
 @app.route("/sign_in", methods=['POST'])
 @required_fields(['email', 'password'])

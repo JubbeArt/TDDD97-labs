@@ -1,10 +1,8 @@
+const path = require('path')
+
 module.exports = {
-  entry: [
-    './static/index.js'
-  ],
-  devServer: {
-    contentBase: './static',
-    historyApiFallback: true
+  output: {
+    path: path.join(__dirname, 'static', 'dist')
   },
   devtool: 'eval',
   module: {
