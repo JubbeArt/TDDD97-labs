@@ -83,7 +83,7 @@ class App extends React.Component {
           viewers: data.viewers,
           numberOfPosts: data.numberOfPosts
         })
-        console.log('GOT NEW STATS FROM SERVER', data)
+        console.log('GOT NEW STATS FROM SERVER', message)
       }
     }
   }

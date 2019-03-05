@@ -148,12 +148,18 @@ def get_viewers(email):
     res = query_db('SELECT viewers FROM viewers WHERE email = ?', [email])
     return res[0] if res else res
 
+first_time_connect = True 
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
-        print('REMOVING ALL TOKENS, SHOULD ONLY BE CALLED ONCE OTHERWISE WE ARE RETARDED')
-        #execute_db('DELETE FROM tokens')
+        # Remove invalid tokens on server restart
+        global first_time_connect
+        if first_time_connect:
+            print('REMOVING ALL TOKENS, SHOULD ONLY BE CALLED ONCE OTHERWISE WE ARE RETARDED')
+            execute_db('DELETE FROM tokens')
+            first_time_connect = False
     return db
 
 

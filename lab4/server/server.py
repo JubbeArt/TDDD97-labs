@@ -48,7 +48,7 @@ def login_socket(ws):
 def notify_all_sockets():
     print('NOTIFYING USERS!!!!!!!!!')
     concurrent_users = dh.get_users_online()  
-    print('ye')
+ 
     for email in opensockets:
         viewers = dh.get_viewers(email)
         number_of_posts = dh.get_number_of_posts(email)
@@ -57,9 +57,12 @@ def notify_all_sockets():
             #print(email, socket,'is open:', not socket.closed)
             if not socket.closed:                
                 socket.send(json.dumps({
-                    "concurrent_users": concurrent_users,
-                    "number_of_posts": number_of_posts,
-                    "viewers": viewers
+                    "type": "stats",
+                    "data": {
+                        "concurrent_users": concurrent_users,
+                        "number_of_posts": number_of_posts,
+                        "viewers": viewers
+                    }
                 }))
 
 
@@ -140,9 +143,10 @@ def get_user_data_by_token(token):
 @required_fields(['email'])
 @validate_email_format
 def get_user_data_by_email(_):
-    data = dh.get_user_data_by_email(request.args['email'])
+    email = request.args['email']
+    data = dh.get_user_data_by_email(email)
     if data:
-        dh.add_viewer()
+        dh.add_viewer(email)
         notify_all_sockets()
         return status(data)
     
