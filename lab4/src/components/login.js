@@ -19,6 +19,7 @@ export default class extends React.Component {
 
     if (input.password !== input.password2) {
       this.props.feedback('Passwords needs to match')
+      return
     }
 
     try {
