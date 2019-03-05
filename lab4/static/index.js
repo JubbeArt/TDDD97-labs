@@ -21,7 +21,14 @@ const Feedback = (props) => {
 
 function App () {
   const [token, setToken] = useState(localStorage.getItem('TOKEN'))
-  const [socket, setSocket] = useState(null)
+  const [concurrentUsers, setConcurrentUsers] = useState(0)
+  const [viewers, setViewers] = useState(0)
+  const [numberOfPosts, setNumberOfPosts] = useState(0)
+
+  function removeToken () {
+    localStorage.removeItem('TOKEN')
+    setToken(null)
+  }
 
   useEffect(() => {
     console.log('token changed')
@@ -34,9 +41,17 @@ function App () {
     connection.onopen = () => connection.send(token)
     connection.onmessage = (message) => {
       message = JSON.parse(message.data)
-      console.log('type', message.type)
-      console.log('data', message.data)
-      // removeToken()
+      const {type, data} = message
+
+      if(type === 'logout') {
+        removeToken()
+      } else if (type === 'stats') {
+        setConcurrentUsers(data.concurrent_users)
+        setViewers(data.viewers)
+        setNumberOfPosts(data.number_of_posts)
+        console.log('GOT NEW STATS FROM SERVER', data)
+      }
+      // 
       // displayView()
     }
     
@@ -59,10 +74,6 @@ function App () {
     setMessage('')
   }
 
-  function removeToken () {
-    localStorage.removeItem('TOKEN')
-    setToken(null)
-  }
 
   if (token !== null) {
     return (
@@ -79,7 +90,12 @@ function App () {
           <Route path='/home' render={() => <Home feedback={feedback} clearFeedback={clearFeedback} />} />
           <Route path='/browse' render={() => <Browse feedback={feedback} clearFeedback={clearFeedback} />} />
           <Route path='/account' render={() => <Account feedback={feedback} clearFeedback={clearFeedback} removeToken={removeToken} />} />
-          <Route path='/stats' render={() => <Stats feedback={feedback} clearFeedback={clearFeedback} />} />
+          <Route path='/stats' render={() => <Stats 
+            concurrentUsers={concurrentUsers}
+            viewers={viewers}
+            feedback={feedback} 
+            numberOfPosts={numberOfPosts}
+            clearFeedback={clearFeedback} />} />
         </Switch>
     </>
     )

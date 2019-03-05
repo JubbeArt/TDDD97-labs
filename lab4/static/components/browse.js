@@ -16,8 +16,8 @@ export default class Browse extends React.Component {
     const input = getFormInput(event)
 
     try {
-      const data = await requests.post('/get_user_data_by_email', input)
-      const posts = await requests.post('/get_user_messages_by_email', input)
+      const data = await requests.get('/get_user_data_by_email?email=' + input.email)
+      const posts = await requests.get('/get_user_messages_by_email?email=' + input.email)
       this.setState({ lastEmail: input.email, data: data, posts: posts })
       this.props.clearFeedback()
     } catch (err) {
@@ -34,7 +34,7 @@ export default class Browse extends React.Component {
     console.log(message)
     await requests.post('/post_message', { message, email: this.state.lastEmail }, false)
     // fetch other users posts
-    const posts = await requests.post('/get_user_messages_by_email', { email: this.state.lastEmail })
+    const posts = await requests.get('/get_user_messages_by_email?email=' + this.state.lastEmail)
     this.setState({ posts: posts })
   }
 

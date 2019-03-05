@@ -26,10 +26,8 @@ def execute_db(query: str, args=()):
 def login(email: str, password: str):
     db_password = query_db('SELECT password FROM users WHERE email = ?', [email])
     
-    if db_password[0] == password:
-        # Send message to all with email x
-        # delete old tokens ... profit
-
+    # user not found and other shit
+    if db_password and db_password[0] == password:
         execute_db('DELETE FROM tokens WHERE email = ?', [email]) 
         token = generate_token()
         execute_db('INSERT INTO tokens VALUES (?, ?)', [token , email]) 
@@ -98,7 +96,9 @@ def get_messages_by_email(email: str):
         return False
 
     data = query_db('SELECT message, author FROM messages WHERE email=?', [email], False)
-    
+    add_viewer(email)
+
+
     if not data:
         return jsonify([])
 
@@ -124,16 +124,39 @@ def post_message(token, email, message):
     execute_db('INSERT INTO messages (message, email, author) VALUES (?, ?, ?)', [message, email, author])
 
 
-## sockets
-def get_users_online():
-    res = query_db('SELECT COUNT(*) FROM tokens')
+def add_viewer(email):
+    res = query_db('SELECT viewers FROM viewers WHERE email = ?', [email])
     print(res)
 
+    ## VIEWER ROW DOES NOT EXISTS
+    if not res:
+        execute_db('INSERT INTO viewers (viewers, email) VALUES (1, ?)', [email])
+    else:
+        execute_db('UPDATE viewers SET viewers = viewers + 1 WHERE email = ?', [email])
+
+
+## for live data feed
+def get_users_online():
+    return query_db('SELECT COUNT(*) FROM tokens')[0]
+
+def get_number_of_posts(email):
+    return query_db('SELECT COUNT(*) FROM messages WHERE email = ?', [email])[0]
+
+def get_viewers(email):
+    res = query_db('SELECT viewers FROM viewers WHERE email = ?', [email])
+    
+    ## row does not exists
+    if res == None:
+        return 0
+
+    return res[0]
 
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        print('REMOVING ALL TOKENS, SHOULD ONLY BE CALLED ONCE OTHERWISE WE ARE RETARDED')
+        #execute_db('DELETE FROM tokens')
     return db
 
 

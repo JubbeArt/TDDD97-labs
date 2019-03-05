@@ -19,6 +19,10 @@ opensockets = {}
 #     "a@a": []
 # }
 
+
+
+
+
 @sockets.route('/log_in')
 def echo_socket(ws):
     token = ws.receive()
@@ -29,14 +33,40 @@ def echo_socket(ws):
     else:
         opensockets[email] = [ws]
 
-    ws.send(json.dumps({"type": "users", "data": 23}))
+    data = {
+        "concurrent_users": dh.get_users_online(),
+        "number_of_posts": dh.get_number_of_posts(email),
+        "viewers": dh.get_viewers(email)
+    }
+
+    ws.send(json.dumps({"type": "stats", "data": data}))
 
     while not ws.closed:
         ws.receive()
 
+def notify_all_sockets():
+    concurrent_users = dh.get_users_online()  
+    print('NOTIFYING USERS!!!!!!!!!')
+
+    for email in opensockets:
+        viewers = dh.get_viewers(email)
+        number_of_posts = dh.get_number_of_posts(email)
+
+        for socket in opensockets[email]:
+            print(email, socket,'is open:', not socket.closed)
+            if socket.closed:
+                continue
+
+            socket.send(json.dumps({
+                "concurrent_users": concurrent_users,
+                "number_of_posts": number_of_posts,
+                "viewers": viewers
+            }))
+
 
 @app.route('/')
 def index():
+    notify_all_sockets()
     return app.send_static_file('index.html')
 
 @app.route("/sign_in", methods=['POST'])
@@ -50,7 +80,7 @@ def sign_in():
         if email in opensockets:
             for  socket in opensockets[email]:
                 if not socket.closed:
-                    socket.send('msg')
+                    socket.send(json.dumps({'type': 'logout'}))
             opensockets[email] = []
         return status({'token': token}, "Successfully signed in.")
     else:

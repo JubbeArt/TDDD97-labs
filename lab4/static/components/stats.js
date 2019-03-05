@@ -6,84 +6,47 @@ export default class Stats extends React.Component {
     super()
 
     this.state = {
-        usersOnline: 0,
-        // numberOfPosts: [0, 1, 4, 76],
-        // numberOfPosts: 50,
-        // numberOfViews: 50
     }
   }
 
   componentDidMount() {
-    console.log('mounted')
-
-
-    // connection = new WebSocket('ws://localhost:5000/users_online')
-
-    // connection.onopen = () => {
-    //   console.log('awdawsasadawerwa432')
-    //   connection.send(getToken())
-    // }
-  
-    // connection.onmessage = (message) => {
-    //   console.log('Got message. GET OUT!', message)
-    //   removeToken()
-    //   displayView()
-    // }
-
+    this.drawChart("chart", [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers] )    
   }
 
-  name(params) {
-    if(!document.getElementById(params)) return
+  drawChart(id, data) {
+    if(!document.getElementById(id)) {
+        return
+    } 
 
-    var ctx = document.getElementById(params).getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
+    const context = document.getElementById(id).getContext('2d');
+    const chart = new Chart(context, {
+        type: 'bar',
         data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            labels: ["Viewers", "Number of posts", "Concurrent users"],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
+                label: 'Live data',
+                data: data,
                 backgroundColor: [
                     'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
                 ],
                 borderColor: [
                     'rgba(255,99,132,1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
             }]
-        },
-        // options: {
-        //     scales: {
-        //         yAxes: [{
-        //             ticks: {
-        //                 beginAtZero:true
-        //             }
-        //         }]
-        //     }
-        // }
-    });  
+        }
+    })
   }
 
   render () {
-    this.name("myChart1")
-    // this.name("myChart2")
-    // this.name("myChart3")
-
+    this.drawChart("chart", [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers] )    
     return (
         <div id='stats'>
-            <canvas width="400" height="400" id="myChart1"></canvas>
-            {/* <canvas width="400" height="400" id="myChart2"></canvas>
-            <canvas width="400" height="400" id="myChart3"></canvas> */}
+            <canvas width="400" height="400" id="chart"></canvas>
         </div>
     )
   }

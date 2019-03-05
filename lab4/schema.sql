@@ -14,6 +14,12 @@ CREATE TABLE IF NOT EXISTS tokens (
     FOREIGN KEY (email) REFERENCES users (email)
 );
 
+CREATE TABLE IF NOT EXISTS viewers (
+    viewers NUMBER,
+    email TEXT PRIMARY KEY,
+    FOREIGN KEY (email) REFERENCES users (email)
+);
+
 CREATE TABLE IF NOT EXISTS  messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     message TEXT,
@@ -22,4 +28,3 @@ CREATE TABLE IF NOT EXISTS  messages (
     FOREIGN KEY (email) REFERENCES users (email),
     FOREIGN KEY (author) REFERENCES users (email)
 );
-
