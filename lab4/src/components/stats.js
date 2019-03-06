@@ -14,7 +14,7 @@ export default class Stats extends React.Component {
     this.chart = new Chart(context, {
       type: 'bar',
       data: {
-        labels: ['Viewers', 'Number of posts', 'Concurrent users'],
+        labels: ['Views', 'Number of posts', 'Concurrent users'],
         datasets: [{
           label: 'Live data',
           data: [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers],
@@ -45,7 +45,7 @@ export default class Stats extends React.Component {
 
   updateChart () {
     if (!this.chart) return
-    // ye....
+
     this.chart.data.datasets[0].data = [this.props.viewers, this.props.numberOfPosts, this.props.concurrentUsers]
     this.chart.update()
   }

@@ -5,6 +5,8 @@ from helpers import login_required, validate_email_format, required_fields, stat
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 import json
+import files
+
 
 app = Flask(__name__, static_url_path='/static', static_folder='../static')
 sockets = Sockets(app)
@@ -64,7 +66,10 @@ def notify_all_sockets():
                         "viewers": viewers
                     }
                 }))
-
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    # files.upload_file()
+    return error_status(400, 'rekt')
 
 @app.route('/')
 @app.route('/home')
