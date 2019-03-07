@@ -66,16 +66,22 @@ def notify_all_sockets():
                         "viewers": viewers
                     }
                 }))
+
 @app.route('/upload_file', methods=['POST'])
-def upload_file():
-    # files.upload_file()
-    return error_status(400, 'rekt')
+@login_required
+def upload_file(_):
+    success = files.upload_file(request)
+    if success:
+        return status('')
+    else:
+        return error_status(400, 'You failed')
 
 @app.route('/')
 @app.route('/home')
 @app.route('/browse')
 @app.route('/account')
 @app.route('/stats')
+@app.route('/media')
 def index():
     return app.send_static_file('index.html')
 

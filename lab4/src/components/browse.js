@@ -31,7 +31,7 @@ export default class Browse extends React.Component {
 
   async postMessageToUser (event) {
     const { message } = getFormInput(event)
-    console.log(message)
+    // console.log(message)
     await requests.post('/post_message', { message, email: this.state.lastEmail }, false)
     // fetch other users posts
     const posts = await requests.get('/get_user_messages_by_email?email=' + this.state.lastEmail)

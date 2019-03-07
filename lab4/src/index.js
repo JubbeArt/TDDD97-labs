@@ -8,6 +8,7 @@ import Login from './components/login'
 import Stats from './components/stats'
 import { requests } from './helpers'
 import Feedback from './components/Feedback'
+import Media from './components/media'
 
 class App extends React.Component {
   constructor () {
@@ -120,6 +121,7 @@ class App extends React.Component {
           <Link to={'browse'} className='tab' style={{ background: 'darkgoldenrod' }} >Browse</Link>
           <Link to={'account'} className='tab' style={{ background: 'orange' }} >Account</Link>
           <Link to={'stats'} className='tab' style={{ background: 'hotpink' }} >Stats</Link>
+          <Link to={'media'} className='tab' style={{ background: 'papayawhip' }} >Media</Link>
         </div>
         <Switch>
           <Route exact path='/' render={() => <Redirect to='/home' />} />
@@ -134,6 +136,7 @@ class App extends React.Component {
               {...feedbackProps} />
           )}
           />
+          <Route path='/media' render={() => <Media {...feedbackProps} />} />
         </Switch>
     </>
     )

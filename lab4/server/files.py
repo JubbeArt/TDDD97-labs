@@ -4,12 +4,14 @@ import os
 #import path
 # TODO: REAL PATH
 UPLOAD_FOLDER = '/home/jeswr740/TDDD97-labs/lab4/media-mapp'
-ALLOWED_EXTENSIONS = set(['ogg'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'mp4', 'mp3', 'webm', 'avi', 'movimaker', 'bmp', 'ogg', 'flac', 'mov'])
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def upload_file(request):
+    print('FILES IS ', request.files)
+
     # File input not sent
     if 'file' not in request.files:
         return False
