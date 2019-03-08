@@ -1,13 +1,6 @@
 import React from 'react'
 
 export default class Stats extends React.Component {
-  constructor (props) {
-    super()
-
-    this.state = {
-    }
-  }
-
   setUpChart () {
     const context = document.getElementById('chart').getContext('2d')
 

@@ -55,6 +55,9 @@ export function postsToHTML (posts) {
 }
 
 export const requests = {
+
+
+
   post: function post (url, data, expectResponse = true) {
     return fetch(url, {
       headers: {
@@ -70,6 +73,7 @@ export const requests = {
         throw new Error(response.statusText)
       })
   },
+
   get: function get (url, expectResponse = true) {
     return fetch(url, {
       headers: {
