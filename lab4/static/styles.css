@@ -5,7 +5,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: dodgerblue;
+    background: linear-gradient(to right, dodgerblue , red);
     font-family: sans-serif;
 }
 

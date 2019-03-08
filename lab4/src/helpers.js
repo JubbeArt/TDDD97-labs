@@ -56,7 +56,7 @@ export function postsToHTML (posts) {
 
 export const requests = {
   post: function post (url, data, expectResponse = true) {
-    return fetch('http://localhost:5000' + url, {
+    return fetch(url, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export const requests = {
       })
   },
   get: function get (url, expectResponse = true) {
-    return fetch('http://localhost:5000' + url, {
+    return fetch(url, {
       headers: {
         'Accept': 'application/json',
         'Authorization': localStorage.getItem('TOKEN')

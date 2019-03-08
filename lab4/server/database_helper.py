@@ -1,6 +1,7 @@
 import sqlite3
 from flask import g, jsonify
 from random import random
+#import flask_bcrypt 
 import os
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
@@ -23,11 +24,11 @@ def execute_db(query: str, args=()):
     get_db().commit()
     cursor.close()
 
-def login(email: str, password: str):
+def login(email: str, password: str, bcrypt):
     db_password = query_db('SELECT password FROM users WHERE email = ?', [email])
     
     # user not found and other shit
-    if db_password and db_password[0] == password:
+    if db_password and bcrypt.check_password_hash(db_password[0], password):
         execute_db('DELETE FROM tokens WHERE email = ?', [email]) 
         token = generate_token()
         execute_db('INSERT INTO tokens VALUES (?, ?)', [token , email]) 
@@ -77,13 +78,15 @@ def get_user_data_by_token(token: str):
         return '-'
     return get_user_data_by_email(email)
 
-def sign_up(email: str, password: str, firstname: str, familyname: str, gender: str, city: str, country: str):
+def sign_up(email: str, password: str, firstname: str, familyname: str, gender: str, city: str, country: str, bcrypt):
     genderNum = 1 if gender == "Male" or gender == "male" or gender == "1" else 0
 
     # email already exsits
     if query_db('SELECT COUNT(*) FROM users WHERE email = ?', [email], True)[0] == 1:
         return False
-
+    
+    
+    password =  bcrypt.generate_password_hash(password).decode('utf-8')
     execute_db('INSERT INTO users VALUES (?,?,?,?,?,?,?)', [email, firstname, familyname, password, city, country, genderNum]) 
     return True
 

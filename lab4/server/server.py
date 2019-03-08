@@ -1,15 +1,15 @@
 from flask import Flask, jsonify, request, send_from_directory
+import flask_bcrypt 
 import database_helper as dh
 from typing import Dict, List
 from helpers import login_required, validate_email_format, required_fields, status, error_status
 from flask_sockets import Sockets
 from geventwebsocket.handler import WebSocketHandler
 import json
-import files
-
 
 app = Flask(__name__, static_url_path='/static', static_folder='../static')
 sockets = Sockets(app)
+bcrypt = flask_bcrypt.Bcrypt(app)
 
 opensockets: Dict[str, List] = {}
 
@@ -35,13 +35,6 @@ def login_socket(ws):
     else:
         opensockets[email] = [ws]
 
-    # data = {
-    #     "concurrent_users": dh.get_users_online(),
-    #     "number_of_posts": dh.get_number_of_posts(email),
-    #     "viewers": dh.get_viewers(email)
-    # }
-
-    # ws.send(json.dumps({"type": "stats", "data": data}))
     notify_all_sockets()
 
     while not ws.closed:
@@ -67,15 +60,6 @@ def notify_all_sockets():
                     }
                 }))
 
-@app.route('/upload_file', methods=['POST'])
-@login_required
-def upload_file(_):
-    success = files.upload_file(request)
-    if success:
-        return status('')
-    else:
-        return error_status(400, 'You failed')
-
 @app.route('/')
 @app.route('/home')
 @app.route('/browse')
@@ -97,7 +81,7 @@ def validate_token(_):
 def sign_in():
     data = request.json
     email = data['email']
-    token = dh.login(email, data['password'])
+    token = dh.login(email, data['password'], bcrypt)
 
     if token:
         if email in opensockets:
@@ -127,7 +111,7 @@ def sign_up():
     if len(data['password']) <= 7:
         return error_status(400, 'Password too short.')
 
-    if dh.sign_up(data['email'], data['password'], data['firstname'], data['familyname'], data['gender'], data['city'], data['country']):
+    if dh.sign_up(data['email'], data['password'], data['firstname'], data['familyname'], data['gender'], data['city'], data['country'], bcrypt):
         return status('')
     else:
         return error_status(400, 'Email already exsits')
@@ -195,6 +179,5 @@ def post_message(token):
 from gevent.pywsgi import WSGIServer
 
 dh.teardown_db(app)
-http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler, keyfile='key.pem', certfile='certificate.pem')
 http_server.serve_forever()
-
